@@ -1,11 +1,26 @@
+import About from "./components/home/About";
+import Admissions from "./components/home/Admissions";
+import Gallery from "./components/home/Gallery";
+import Hero from "./components/home/Hero";
+import WhyChooseUs from "./components/home/WhyChooseUs";
+import Footer from "./components/layout/Footer";
+import Header from "./components/layout/Header";
+
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold">Welcome to My Next.js App!</h1>
-      <p className="mt-4 text-lg text-gray-600">
-        This is the home page of your Next.js application.
-      </p>
-    </main>
+    <>
+      <Header />
+      
+      <main className="flex-grow font-['Plus_Jakarta_Sans']">
+        <Hero />
+        <About />
+        <WhyChooseUs />
+        <Gallery />
+        <Admissions />
+      </main>
+      
+      <Footer />
+    </>
   );
 }
