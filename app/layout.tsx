@@ -19,21 +19,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="light">
+    <html lang="es" className={`${plusJakarta.variable} light`}>
       <head>
         <link 
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" 
           rel="stylesheet" 
         />
-        {/* Estilos base de los iconos y la tipografía */}
-        <style>{`
-          body { background-color: #faf9f6; color: #303330; }
-          .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-          .material-symbols-outlined.fill { font-variation-settings: 'FILL' 1; }
-          .text-balance { text-wrap: balance; }
-        `}</style>
       </head>
-      <body className={`${plusJakarta.variable} font-body antialiased min-h-screen flex flex-col pt-24`}>
+      {/* Usamos font-sans para que Tailwind detecte Plus Jakarta. Eliminamos pt-24 para no dañar el centrado del login */}
+      <body className="font-sans antialiased min-h-screen flex flex-col">
         {children}
       </body>
     </html>
