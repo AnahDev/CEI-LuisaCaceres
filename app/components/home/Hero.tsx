@@ -1,8 +1,10 @@
+import Image from 'next/image';
+
 export default function Hero() {
   return (
     <section className="max-w-7xl mx-auto px-6 mb-24 mt-8 relative">
       <div className="relative rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(48,51,48,0.08)] bg-[#f4f4f0] h-[600px] flex items-center justify-center">
-        <img alt="Niños jugando en preescolar" className="absolute inset-0 w-full h-full object-cover rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC536YZzB6zFOE-QjPyPp8YvcJje5SdlHfWRcBucOC7WOx0avOfj6cwA0L6JH-DxCwfz686Ff12KGi-Ru1SVGO8TncJFRPb8hS1HHj4Xjt9ptaqGINq7ivS28rvQKcRx9dX-ZvHuCD6Guu93knATT7Vn3amvh7txbBaCXoySR2o6BdMGusovIq9oa5yFi1GXp5PdTzqatApPs4llD_Y48cVVy2af80g6ofGPundQwg_kcqD3_bccwS3JGOy8wFz6UtnVB3gIaYhDIVf"/>
+        <img alt="Niños jugando en preescolar" className="absolute inset-0 w-full h-full object-cover rounded-xl" src="/images/imagen 10.jpg"/>
         
         <div className="absolute inset-0 bg-gradient-to-t from-[#006789]/80 to-transparent mix-blend-multiply rounded-xl"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#006789]/60 to-transparent rounded-xl"></div>

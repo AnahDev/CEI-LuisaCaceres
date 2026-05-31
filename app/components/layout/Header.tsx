@@ -34,9 +34,13 @@ export default function Header() {
         </nav>
 
         <div className="hidden md:flex items-center">
-          <button className="bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] px-6 py-2 rounded-full font-bold shadow-[inset_0_2px_0_rgba(255,255,255,0.2)] hover:opacity-90 transition-opacity">
+          <Link 
+            href="/login" 
+            className="bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] px-6 py-2 rounded-full font-bold shadow-[inset_0_2px_0_rgba(255,255,255,0.2)] hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+          >
+            <span className="material-symbols-outlined text-[18px]">login</span>
             Admin
-          </button>
+          </Link>
         </div>
 
         <button className="md:hidden text-sky-600 p-2">

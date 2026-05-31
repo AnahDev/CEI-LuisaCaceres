@@ -38,10 +38,10 @@ export default function About() {
         </div>
         <div className="relative">
           <div className="absolute inset-0 bg-[#62ccff]/20 rounded-xl transform rotate-3 scale-105 -z-10"></div>
-          <img alt="Children painting in a colorful classroom" className="w-full h-[500px] object-cover rounded-xl shadow-[0_8px_30px_rgba(48,51,48,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdFu6X2YuJL4lysGbkapBuJ6pBqU5txK9XRxlciERB5rgVWpsRBnEZSeq6TDn9Uz3fyHQ02IAa6Pacwtfn4-sDIRNLf6UkDD84z_XsxkKwi-2Wl77hr1gToO-2rI3OrqSMQXrzVGFlP-dDdgK0xXHHCMUbkzHn3d4uSA5Q2bOBEtKCswyJzVusEIrO_5zblXveOHnXm_VvQZH5uQiBSRQdYbt3iXUfsaClPh4l590jXB3KsDeuK5xAk9OAIBwhV_Z6M-tASfxdm9U-"/>
+          <img alt="Children painting in a colorful classroom" className="w-full h-[500px] object-cover rounded-xl shadow-[0_8px_30px_rgba(48,51,48,0.08)]" src="/images/imagen 5.jpg" />
           <div className="absolute -bottom-6 -left-6 bg-[#ffffff] p-6 rounded-xl shadow-[0_12px_40px_rgba(48,51,48,0.1)] flex items-center gap-4">
-            <span className="text-4xl font-extrabold text-[#006789]">20+</span>
-            <span className="text-sm font-bold text-[#5d605c] leading-tight">Años de<br/>experiencia</span>
+            <span className="text-4xl font-extrabold text-[#006789]">XX+</span>
+            <span className="text-sm font-bold text-[#5d605c] leading-tight">Años de<br />experiencia</span>
           </div>
         </div>
       </div>
