@@ -36,6 +36,7 @@ export default function Dashboard() {
   const [content, setContent] = useState(INITIAL_CONTENT);
   const [media, setMedia] = useState<MediaItem[]>(INITIAL_MEDIA);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const timestamp = useMemo(
     () => new Date().toLocaleTimeString("es-VE", { hour: "2-digit", minute: "2-digit" }),
@@ -61,6 +62,10 @@ export default function Dashboard() {
     setMedia((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const handleToggleSidebar = () => {
+    setIsSidebarCollapsed((collapsed) => !collapsed);
+  };
+
   const handleSaveDraft = () => {
     // Delegate persistence to whatever the app wires in (API call, local storage, etc.)
     console.log("Guardar borrador", { selectedChannels, content, media });
@@ -78,7 +83,12 @@ export default function Dashboard() {
 
   return (
     <div className="bg-[#f4f4f0] text-[#303330] min-h-screen flex overflow-hidden">
-      <Sidebar schoolName={SCHOOL_NAME} logoUrl={LOGO_URL} onCreatePost={handleSaveDraft} />
+      <Sidebar
+        schoolName={SCHOOL_NAME}
+        logoUrl={LOGO_URL}
+        collapsed={isSidebarCollapsed}
+        onToggleCollapse={handleToggleSidebar}
+      />
 
       <main className="flex-1 overflow-y-auto relative bg-[#f4f4f0] scroll-smooth">
         <Header schoolName={SCHOOL_NAME} section="Anuncios" currentPage="New Post" avatarUrl={AVATAR_URL} />
@@ -117,7 +127,12 @@ export default function Dashboard() {
         </div>
       </main>
 
-      <BottomActionBar onSaveDraft={handleSaveDraft} onPublish={handlePublish} publishing={isPublishing} />
+      <BottomActionBar
+        onSaveDraft={handleSaveDraft}
+        onPublish={handlePublish}
+        publishing={isPublishing}
+        sidebarCollapsed={isSidebarCollapsed}
+      />
     </div>
   );
 }
