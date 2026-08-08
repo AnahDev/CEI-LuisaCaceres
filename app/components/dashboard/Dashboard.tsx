@@ -13,11 +13,11 @@ import type { ChannelId, MediaItem } from "@/types/post";
 
 const SCHOOL_NAME = "UEC Luisa Cáceres";
 const LOGO_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBo7N-7-twyOqI5yL-gMtLBxOEc0E0PvPZ57eA839c6U58Fhbknoy0csvGqi0khxCM4xxl-Lr8C-jHXZLKj1XeH83pq29RLUdf5izZtiR9yqXh9KmqKQm4dTMEseg0vMbjUzDaFjAlp_EHEpj4v6bsg3r3evTGM8lY-KCwuD6PE37VHJFIhhBmFXEbG1ZNPw4GHn2fGANHCuR3xJYhvj5IVE-s1oewG0bgQWvDRQSGBUs2mJWWCKuvYeQ";
+  "images/Logo.jpg";
 const AVATAR_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDKlhdxq_DSWCKCkTFdqhtieAQJeWzwl551wID4gl1g0Pm7qsZiXIG1C6e07mmG2KYeUsREPujgL71wLF0Fe4RZIU8OOmAkJ-0IHgLZPrwagOzIDIz1_iaOxUP-2fPAtL91Kft17QavBguFauLa8aB4GaExV0GGFTQ-3D6bK_w3EZHzBDPFJJKwIKASEuA9l88BCQQtX494kU9FXGE6p2631P4fgNnGtn-GTH1Q2ZbTg5GBlARH2CxXHQ";
+  "images/avatar.png";
 const SAMPLE_MEDIA_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBkOf-btYgeUPmGWKWH6agwe3e6J1F88wJlB60dLNIyE6JovD3AwRaWmRao2wQHXpLr5e9mu4XrB1K9EEKFCzVvHyL7QhH8R7pw7jr2cd0upO8L4iZYfqIbAgpErjqse3VfrRMGMl59lhNLDe0gMNpFC-xLsfA2-PuRRhqar4alx5QUWvb9J9ffIYSLCPIgeTpncybNy1WNNFcFTcLQMCuf7jGKBunmLC_GBp_l91SldML4fNIiTnDWkw";
+  "images/prueba.jpg";
 
 const INITIAL_MEDIA: MediaItem[] = [
   {

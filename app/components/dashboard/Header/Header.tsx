@@ -30,13 +30,6 @@ export default function Header({ schoolName, section, currentPage, avatarUrl }: 
       <div className="flex items-center gap-4">
         <button
           type="button"
-          aria-label="Notificaciones"
-          className="text-[#5d605c] hover:bg-[rgba(225,227,223,0.2)] p-2 rounded-full transition-all active:opacity-80"
-        >
-          <span className="material-symbols-outlined">notifications</span>
-        </button>
-        <button
-          type="button"
           aria-label="Ayuda"
           className="text-[#5d605c] hover:bg-[rgba(225,227,223,0.2)] p-2 rounded-full transition-all active:opacity-80"
         >
