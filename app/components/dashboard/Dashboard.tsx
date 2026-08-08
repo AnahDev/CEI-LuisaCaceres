@@ -81,7 +81,7 @@ export default function Dashboard() {
       <Sidebar schoolName={SCHOOL_NAME} logoUrl={LOGO_URL} onCreatePost={handleSaveDraft} />
 
       <main className="flex-1 overflow-y-auto relative bg-[#f4f4f0] scroll-smooth">
-        <Header schoolName={SCHOOL_NAME} section="Announcements" currentPage="New Post" avatarUrl={AVATAR_URL} />
+        <Header schoolName={SCHOOL_NAME} section="Anuncios" currentPage="New Post" avatarUrl={AVATAR_URL} />
 
         <div className="max-w-6xl mx-auto px-6 md:px-12 py-8 pb-32">
           <div className="mb-12 max-w-2xl">
