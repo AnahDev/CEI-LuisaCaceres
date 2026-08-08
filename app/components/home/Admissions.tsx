@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AdmissionItem from "../ui/AdmissionItem";
 
 const ADMISSION_REQUIREMENTS = [
@@ -28,10 +29,12 @@ export default function Admissions() {
             ))}
           </div>
           <div className="flex justify-center">
-            <button className="bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] px-10 py-4 rounded-full font-bold text-lg shadow-[inset_0_2px_0_rgba(255,255,255,0.2),0_8px_20px_rgba(0,103,137,0.2)] hover:-translate-y-1 transition-transform duration-300 flex items-center gap-2">
-              Ver Admisiones Completas
-              <span className="material-symbols-outlined">assignment</span>
-            </button>
+            <Link href="/admisiones">
+              <button className="bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] px-10 py-4 rounded-full font-bold text-lg shadow-[inset_0_2px_0_rgba(255,255,255,0.2),0_8px_20px_rgba(0,103,137,0.2)] hover:-translate-y-1 transition-transform duration-300 flex items-center gap-2">
+                Ver Admisiones Completas
+                <span className="material-symbols-outlined">assignment</span>
+              </button>
+            </Link>
           </div>
         </div>
       </div>

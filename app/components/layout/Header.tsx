@@ -5,7 +5,7 @@ const NAV_LINKS = [
   { label: "Nosotros", href: "/nosotros", active: false },
   { label: "Publicaciones", href: "#", active: false },
   { label: "Material", href: "#", active: false },
-  { label: "Admisiones", href: "#", active: false },
+  { label: "Admisiones", href: "/admisiones", active: false },
   { label: "Contacto", href: "/contacto", active: false },
 ];
 
