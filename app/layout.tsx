@@ -1,8 +1,6 @@
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
-
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import AppShell from "./components/layout/AppShell";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -31,9 +29,7 @@ export default function RootLayout({
       </head>
       {/* Usamos font-sans para que Tailwind detecte Plus Jakarta. Eliminamos pt-24 para no dañar el centrado del login */}
       <body className="font-sans antialiased min-h-screen flex flex-col">
-        <Header />
-        {children}
-        <Footer />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

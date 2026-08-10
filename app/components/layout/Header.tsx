@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const NAV_LINKS = [
-  { label: "Inicio", href: "/" },
-  { label: "Nosotros", href: "/nosotros" },
-  { label: "Publicaciones", href: "#" },
-  { label: "Material", href: "#" },
-  { label: "Admisiones", href: "#" },
-  { label: "Contacto", href: "/contacto" },
+  { label: "Inicio", href: "/", active: true },
+  { label: "Nosotros", href: "/nosotros", active: false },
+  { label: "Publicaciones", href: "#", active: false },
+  { label: "Material", href: "#", active: false },
+  { label: "Admisiones", href: "/admisiones", active: false },
+  { label: "Contacto", href: "/contacto", active: false },
 ];
 
 export default function Header() {
