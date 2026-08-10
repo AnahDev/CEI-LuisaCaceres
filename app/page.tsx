@@ -3,7 +3,7 @@ import Admissions from "./components/home/Admissions";
 import Gallery from "./components/home/Gallery";
 import Hero from "./components/home/Hero";
 import WhyChooseUs from "./components/home/WhyChooseUs";
-import Header from "./components/layout/Header";
+// import Header from "./components/layout/Header";
 
 import About from "./components/about/About";
 
@@ -11,7 +11,7 @@ import About from "./components/about/About";
 export default function Home() {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
 
       <main className="flex-grow font-['Plus_Jakarta_Sans']">
         <Hero />

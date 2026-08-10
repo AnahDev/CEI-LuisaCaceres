@@ -29,12 +29,12 @@ export default function ContactoPage() {
                         {
                             icon: "location_on",
                             label: "Sede Principal",
-                            value: "Av. Principal, Sector Centro. Ciudad Guayana, Estado Bolívar, Venezuela."
+                            value: "Calle India, Ciudad Guayana 8050, Bolívar"
                         },
                         {
                             icon: "directions_bus",
                             label: "Referencia",
-                            value: "A dos cuadras de la plaza central, frente al parque."
+                            value: "Diagonal a la UNEG de Villa Asia"
                         }
                     ]}
                 />
