@@ -83,10 +83,10 @@ export default function Hero() {
           <p className="text-xl text-[#ffffff]/90 font-medium max-w-xl mx-auto text-balance transition-all duration-500">
             {CAROUSEL_SLIDES[currentSlide].description}
           </p>
-          <button className="mt-4 bg-gradient-to-br from-[#f7a48b] to-[#f7a48b] text-[#5c2615] px-10 py-4 rounded-full font-bold text-lg shadow-[inset_0_2px_0_rgba(255,255,255,0.4),0_8px_20px_rgba(247,164,139,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+          {/* <button className="mt-4 bg-gradient-to-br from-[#f7a48b] to-[#f7a48b] text-[#5c2615] px-10 py-4 rounded-full font-bold text-lg shadow-[inset_0_2px_0_rgba(255,255,255,0.4),0_8px_20px_rgba(247,164,139,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
             Conoce más
             <span className="material-symbols-outlined font-bold">arrow_forward</span>
-          </button>
+          </button> */}
         </div>
 
         {/* Botón de control Izquierdo (Retroceder) */}
@@ -114,8 +114,8 @@ export default function Hero() {
               key={idx}
               onClick={() => setCurrentSlide(idx)}
               className={`w-3 h-3 rounded-full shadow-sm transition-all duration-300 outline-none ${idx === currentSlide
-                  ? 'bg-[#ffffff] scale-125'
-                  : 'bg-[#ffffff]/50 hover:bg-[#ffffff]/80 cursor-pointer'
+                ? 'bg-[#ffffff] scale-125'
+                : 'bg-[#ffffff]/50 hover:bg-[#ffffff]/80 cursor-pointer'
                 }`}
               aria-label={`Ir a la diapositiva ${idx + 1}`}
             />

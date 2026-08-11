@@ -1,4 +1,5 @@
-import ContactCard from "../components/contact/ContactCard";// Ajusta esta ruta según donde guardaste el componente
+import ContactCard from "../components/contact/ContactCard";
+import LocationMap from "../components/contact/LocationMap"; // ajusta la ruta si organizas distinto
 
 export default function ContactoPage() {
     return (
@@ -18,13 +19,13 @@ export default function ContactoPage() {
             </div>
 
             {/* Cuadrícula de Tarjetas de Contacto */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
 
                 {/* Tarjeta de Ubicación */}
                 <ContactCard
                     title="Nuestra Ubicación"
                     mainIcon="map"
-                    colorHex="#ea580c" // Naranja
+                    colorHex="#ea580c"
                     details={[
                         {
                             icon: "location_on",
@@ -43,7 +44,7 @@ export default function ContactoPage() {
                 <ContactCard
                     title="Atención al Público"
                     mainIcon="support_agent"
-                    colorHex="#16a34a" // Verde
+                    colorHex="#16a34a"
                     details={[
                         {
                             icon: "schedule",
@@ -70,6 +71,13 @@ export default function ContactoPage() {
                 />
 
             </div>
+
+            {/* Mapa de ubicación — reemplaza embedSrc con tu URL real de Google Maps */}
+            <LocationMap embedSrc="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.207939505003!2d-62.72478140347875!3d8.282092610364469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8dcbfbddf55f0f95%3A0x1473365a96461b5f!2sCentro%20de%20Educaci%C3%B3n%20Inicial%20Luisa%20C%C3%A1ceres%20de%20Arismendi!5e0!3m2!1sen!2sus!4v1786489645178!5m2!1sen!2sus" />
+
+            {/* <LocationMap query="Centro de Educación Inicial Luisa Cáceres de Arismendi, Ciudad Guayana, Bolívar" /> */}
+
         </main>
     );
 }
+
