@@ -16,29 +16,15 @@ const NAV_LINKS: NavLink[] = [
     label: "Nosotros",
     href: "/nosotros",
     children: [
-      { label: "Reseña Histórica", href: "#" },
-      { label: "Misión y Visión", href: "#" },
+      { label: "Reseña Histórica", href: "/nosotros/historia" },
+      // { label: "Misión y Visión", href: "#" },
       { label: "Organigrama", href: "#" },
       { label: "PEIC", href: "#" },
     ],
   },
-  {
-    label: "Publicaciones",
-    href: "#",
-    children: [
-      { label: "Cartelera Informativa", href: "#" },
-      { label: "Galería", href: "#" },
-    ],
-  },
-  {
-    label: "Material",
-    href: "#",
-    children: [
-      { label: "Libros Didácticos", href: "#" },
-      { label: "Para Pintar", href: "#" },
-    ],
-  },
-  { label: "Admisiones", href: "#" },
+  { label: "Cartelera", href: "/cartelera" },
+  { label: "Galería", href: "/galeria" },
+  { label: "Admisiones", href: "/admisiones" },
   { label: "Contacto", href: "/contacto" },
 ];
 

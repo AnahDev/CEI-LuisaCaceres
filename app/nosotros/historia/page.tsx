@@ -1,5 +1,5 @@
-import About from "../components/about/About";
-import InfoCard from "../components/about/InfoCard";
+import About from "../../components/about/About";
+import InfoCard from "../../components/about/InfoCard";
 
 export default function Home() {
     return (
