@@ -1,4 +1,5 @@
 import type { NavItem } from "@/types/post";
+import Link from "next/link";
 
 interface NavLinkProps {
   item: NavItem;
@@ -14,7 +15,7 @@ interface NavLinkProps {
  */
 export default function NavLink({ item, active, collapsed }: NavLinkProps) {
   return (
-    <a
+    <Link
       href={item.href}
       aria-current={active ? "page" : undefined}
       aria-label={item.label}
@@ -38,6 +39,6 @@ export default function NavLink({ item, active, collapsed }: NavLinkProps) {
           {item.label}
         </span>
       )}
-    </a>
+    </Link>
   );
 }
