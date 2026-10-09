@@ -23,6 +23,13 @@ export interface NavItem {
   icon: string;
   iconFilled: boolean;
   href: string;
+  children?: NavSubItem[];
+}
+
+export interface NavSubItem {
+  id: string;
+  label: string;
+  href: string;
 }
 
 export interface PostDraft {

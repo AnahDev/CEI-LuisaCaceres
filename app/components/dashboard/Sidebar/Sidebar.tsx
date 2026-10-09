@@ -1,5 +1,6 @@
 import NavLink from "./NavLink";
 import { NAV_ITEMS, ACTIVE_NAV_ID } from "@/data/navigation";
+import { useState } from "react";
 
 interface SidebarProps {
   schoolName: string;
@@ -7,6 +8,7 @@ interface SidebarProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
   activeItemId?: string;
+  currentPathname?: string;
 }
 
 export default function Sidebar({
@@ -15,7 +17,16 @@ export default function Sidebar({
   collapsed,
   onToggleCollapse,
   activeItemId = ACTIVE_NAV_ID,
+  currentPathname,
 }: SidebarProps) {
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
+    (): Record<string, boolean> => (activeItemId === "schedule" ? { schedule: true } : {})
+  );
+
+  const toggleItem = (itemId: string) => {
+    setExpandedItems((expanded) => ({ ...expanded, [itemId]: !expanded[itemId] }));
+  };
+
   return (
     <nav
       className={[
@@ -44,7 +55,16 @@ export default function Sidebar({
 
         <div className={["flex-1 space-y-1", collapsed ? "w-full" : "w-full"].join(" ")}>
           {NAV_ITEMS.map((item) => (
-            <NavLink key={item.id} item={item} active={item.id === activeItemId} collapsed={collapsed} />
+            <NavLink
+              key={item.id}
+              item={item}
+              active={item.id === activeItemId}
+              collapsed={collapsed}
+              currentPathname={currentPathname}
+              expanded={Boolean(expandedItems[item.id])}
+              onNavigate={item.children ? () => setExpandedItems((expanded) => ({ ...expanded, [item.id]: true })) : undefined}
+              onToggleExpanded={item.children ? () => toggleItem(item.id) : undefined}
+            />
           ))}
         </div>
 

@@ -11,7 +11,9 @@ const LOGO_URL = "/images/Logo.jpg";
 const AVATAR_URL = "/images/avatar.png";
 const PAGE_LABELS: Record<string, string> = {
   "/dashboard": "Nueva Publicación",
-  "/dashboard/schedule": "Nuevo Evento",
+  "/dashboard/schedule": "Publicaciones",
+  "/dashboard/schedule/nueva-publicacion": "Nueva Publicación",
+  "/dashboard/schedule/nuevo-evento": "Nuevo Evento",
   "/dashboard/schedule/publicaciones": "Publicaciones",
 };
 
@@ -25,7 +27,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const activeItem = NAV_ITEMS
-    .filter((item) => item.href !== "#" && (pathname === item.href || pathname.startsWith(`${item.href}/`)))
+    .filter(
+      (item) =>
+        item.href !== "#" &&
+        (pathname === item.href || (item.id !== "announcements" && pathname.startsWith(`${item.href}/`)))
+    )
     .sort((first, second) => second.href.length - first.href.length)[0];
   const section = activeItem?.label ?? "Dashboard";
   const currentPage = PAGE_LABELS[pathname] ?? pathname.split("/").filter(Boolean).at(-1) ?? section;
