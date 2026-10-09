@@ -5,7 +5,7 @@ export default function LoginHeader() {
         <img 
           alt="UEC Luisa Cáceres de Arismendi Logo" 
           className="w-20 h-20 rounded-full object-cover shadow-sm" 
-          src="images/Logo.jpg" 
+          src="/images/Logo.jpg"
         />
         <div className="absolute -bottom-1 -right-1 bg-[#cbfecc] p-1.5 rounded-full border-4 border-[#ffffff]">
           <span className="material-symbols-outlined text-[#3c6942] text-[16px] fill">verified_user</span>

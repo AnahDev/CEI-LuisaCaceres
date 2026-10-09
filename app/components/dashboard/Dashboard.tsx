@@ -1,21 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Sidebar from "./Sidebar/Sidebar";
-import Header from "./Header/Header";
 import ChannelSelector from "./PostEditor/ChannelSelector";
 import ContentEditor from "./PostEditor/ContentEditor";
 import MediaUploader from "./PostEditor/MediaUploader";
 import PreviewPanel from "./Preview/PreviewPanel";
 import BottomActionBar from "./BottomActionBar";
+import { useDashboardSidebarCollapsed } from "@/app/dashboard/DashboardLayout";
 import { CHANNELS, DEFAULT_SELECTED_CHANNELS, MAX_POST_LENGTH } from "@/data/channels";
 import type { ChannelId, MediaItem } from "@/types/post";
 
 const SCHOOL_NAME = "UEC Luisa Cáceres";
-const LOGO_URL =
-  "images/Logo.jpg";
-const AVATAR_URL =
-  "images/avatar.png";
 const SAMPLE_MEDIA_URL =
   "images/prueba.jpg";
 
@@ -36,7 +31,7 @@ export default function Dashboard() {
   const [content, setContent] = useState(INITIAL_CONTENT);
   const [media, setMedia] = useState<MediaItem[]>(INITIAL_MEDIA);
   const [isPublishing, setIsPublishing] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const isSidebarCollapsed = useDashboardSidebarCollapsed();
 
   const timestamp = useMemo(
     () => new Date().toLocaleTimeString("es-VE", { hour: "2-digit", minute: "2-digit" }),
@@ -62,10 +57,6 @@ export default function Dashboard() {
     setMedia((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const handleToggleSidebar = () => {
-    setIsSidebarCollapsed((collapsed) => !collapsed);
-  };
-
   const handleSaveDraft = () => {
     // Delegate persistence to whatever the app wires in (API call, local storage, etc.)
     console.log("Guardar borrador", { selectedChannels, content, media });
@@ -82,50 +73,39 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="bg-[#f4f4f0] text-[#303330] min-h-screen flex overflow-hidden">
-      <Sidebar
-        schoolName={SCHOOL_NAME}
-        logoUrl={LOGO_URL}
-        collapsed={isSidebarCollapsed}
-        onToggleCollapse={handleToggleSidebar}
-      />
+    <>
+      <div className="max-w-6xl mx-auto px-6 md:px-12 py-8 pb-32">
+        <div className="mb-12 max-w-2xl">
+          <h1 className="font-['Plus_Jakarta_Sans'] text-[2rem] font-extrabold text-[#303330] tracking-tight mb-3">
+            Crear Publicación
+          </h1>
+          <p className="font-['Plus_Jakarta_Sans'] text-[1.0625rem] text-[#5d605c] leading-relaxed">
+            Redacta y programa contenido para tus redes sociales y canales de comunicación escolares.
+          </p>
+        </div>
 
-      <main className="flex-1 overflow-y-auto relative bg-[#f4f4f0] scroll-smooth">
-        <Header schoolName={SCHOOL_NAME} section="Anuncios" currentPage="New Post" avatarUrl={AVATAR_URL} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          <div className="lg:col-span-7 space-y-8">
+            <ChannelSelector channels={CHANNELS} selected={selectedChannels} onToggle={handleToggleChannel} />
 
-        <div className="max-w-6xl mx-auto px-6 md:px-12 py-8 pb-32">
-          <div className="mb-12 max-w-2xl">
-            <h1 className="font-['Plus_Jakarta_Sans'] text-[2rem] font-extrabold text-[#303330] tracking-tight mb-3">
-              Crear Publicación
-            </h1>
-            <p className="font-['Plus_Jakarta_Sans'] text-[1.0625rem] text-[#5d605c] leading-relaxed">
-              Redacta y programa contenido para tus redes sociales y canales de comunicación escolares.
-            </p>
+            <ContentEditor value={content} onChange={setContent} maxLength={MAX_POST_LENGTH} />
+
+            <MediaUploader media={media} onFilesSelected={handleFilesSelected} onRemove={handleRemoveMedia} />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-            <div className="lg:col-span-7 space-y-8">
-              <ChannelSelector channels={CHANNELS} selected={selectedChannels} onToggle={handleToggleChannel} />
-
-              <ContentEditor value={content} onChange={setContent} maxLength={MAX_POST_LENGTH} />
-
-              <MediaUploader media={media} onFilesSelected={handleFilesSelected} onRemove={handleRemoveMedia} />
-            </div>
-
-            <div className="lg:col-span-5 space-y-8">
-              <PreviewPanel
-                channels={CHANNELS}
-                activeChannel={activePreviewChannel}
-                onActiveChannelChange={setActivePreviewChannel}
-                schoolName={SCHOOL_NAME}
-                content={content}
-                media={media}
-                timestamp={timestamp}
-              />
-            </div>
+          <div className="lg:col-span-5 space-y-8">
+            <PreviewPanel
+              channels={CHANNELS}
+              activeChannel={activePreviewChannel}
+              onActiveChannelChange={setActivePreviewChannel}
+              schoolName={SCHOOL_NAME}
+              content={content}
+              media={media}
+              timestamp={timestamp}
+            />
           </div>
         </div>
-      </main>
+      </div>
 
       <BottomActionBar
         onSaveDraft={handleSaveDraft}
@@ -133,6 +113,6 @@ export default function Dashboard() {
         publishing={isPublishing}
         sidebarCollapsed={isSidebarCollapsed}
       />
-    </div>
+    </>
   );
 }

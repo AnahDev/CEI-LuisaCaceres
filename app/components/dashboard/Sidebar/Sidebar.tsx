@@ -6,13 +6,20 @@ interface SidebarProps {
   logoUrl: string;
   collapsed: boolean;
   onToggleCollapse: () => void;
+  activeItemId?: string;
 }
 
-export default function Sidebar({ schoolName, logoUrl, collapsed, onToggleCollapse }: SidebarProps) {
+export default function Sidebar({
+  schoolName,
+  logoUrl,
+  collapsed,
+  onToggleCollapse,
+  activeItemId = ACTIVE_NAV_ID,
+}: SidebarProps) {
   return (
     <nav
       className={[
-        "hidden md:flex flex-col bg-[#f4f4f0] h-screen rounded-r-[3rem] shadow-sm z-20 transition-[width] duration-300 ease-in-out",
+        "hidden md:flex sticky top-0 self-start flex-col bg-[#f4f4f0] h-screen rounded-r-[3rem] shadow-sm z-20 transition-[width] duration-300 ease-in-out",
         collapsed ? "w-20" : "w-72",
       ].join(" ")}
     >
@@ -37,7 +44,7 @@ export default function Sidebar({ schoolName, logoUrl, collapsed, onToggleCollap
 
         <div className={["flex-1 space-y-1", collapsed ? "w-full" : "w-full"].join(" ")}>
           {NAV_ITEMS.map((item) => (
-            <NavLink key={item.id} item={item} active={item.id === ACTIVE_NAV_ID} collapsed={collapsed} />
+            <NavLink key={item.id} item={item} active={item.id === activeItemId} collapsed={collapsed} />
           ))}
         </div>
 
