@@ -9,7 +9,7 @@ export default function SubmitButton({ children, icon, ...props }: SubmitButtonP
   return (
     <div className="pt-2">
       <button 
-        className="w-full py-4 px-6 bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] font-bold rounded-full shadow-lg shadow-[#62ccff]/20 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group"
+        className="w-full py-4 px-6 bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] font-bold rounded-full shadow-lg shadow-[#62ccff]/20 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group disabled:opacity-60 disabled:pointer-events-none"
         {...props}
       >
         <span>{children}</span>

@@ -2,18 +2,31 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import BackgroundBlobs from '../components/background/BackgroundBlobs';
 import FloatingParticles from '../components/background/FloatingParticles';
 import LoginHeader from '../components/form/LoginHeader';
 import LoginForm from '../components/form/LoginForm';
+import { clearSession, fetchCurrentUser, getToken } from '@/lib/auth';
 
 
 export default function AdminLogin() {
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  useEffect(() => {
+    if (!getToken()) {
+      return;
+    }
+
+    fetchCurrentUser()
+      .then(() => router.replace('/dashboard'))
+      .catch(() => clearSession());
+  }, [router]);
 
   return (
     <div 
