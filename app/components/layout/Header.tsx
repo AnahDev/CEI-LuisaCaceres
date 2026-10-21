@@ -1,156 +1,256 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {
+  ArrowRight,
+  ClipboardCheck,
+  House,
+  Images,
+  LockKeyhole,
+  Menu,
+  MessageCircleHeart,
+  Newspaper,
+  Users,
+  X,
+} from 'lucide-react';
 import NavDropdown from './NavDropdown';
 import NavAccordionItem from './NavAccordionItem';
+import ThemeToggle from '../ui/ThemeToggle';
+import Logo from '../ui/Logo';
 
 type SubLink = { label: string; href: string };
-type NavLink = { label: string; href: string; children?: SubLink[] };
+type NavLinkItem = {
+  label: string;
+  href: string;
+  icon: React.ElementType;
+  children?: SubLink[];
+};
 
-// NOTA: los href con "#" son placeholders — actualízalos cuando crees esas páginas
-const NAV_LINKS: NavLink[] = [
-  { label: "Inicio", href: "/" },
+const NAV_LINKS: NavLinkItem[] = [
+  { label: 'Inicio', href: '/', icon: House },
   {
-    label: "Nosotros",
-    href: "/nosotros",
+    label: 'Nosotros',
+    href: '/nosotros',
+    icon: Users,
     children: [
-      { label: "Reseña Histórica", href: "/nosotros/historia" },
-      // { label: "Misión y Visión", href: "#" },
-      { label: "Organigrama", href: "#" },
-      { label: "PEIC", href: "#" },
+      { label: 'Reseña Histórica', href: '/nosotros/historia' },
+      { label: 'Organigrama', href: '#' },
+      { label: 'PEIC', href: '#' },
     ],
   },
-  { label: "Cartelera", href: "/cartelera" },
-  { label: "Galería", href: "/galeria" },
-  { label: "Admisiones", href: "/admisiones" },
-  { label: "Contacto", href: "/contacto" },
+  { label: 'Cartelera', href: '/cartelera', icon: Newspaper },
+  { label: 'Galería', href: '/galeria', icon: Images },
+  { label: 'Admisiones', href: '/admisiones', icon: ClipboardCheck },
+  { label: 'Contacto', href: '/contacto', icon: MessageCircleHeart },
 ];
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
-  // "/" solo debe marcarse activo en la home exacta; el resto compara con startsWith
   const isActive = (href: string) =>
-    href !== "#" && (href === "/" ? pathname === "/" : pathname.startsWith(href));
+    href !== '#' &&
+    (href === '/' ? pathname === '/' : pathname.startsWith(href));
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMenuOpen(false);
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isMenuOpen]);
 
   return (
     <>
-      <header className="fixed top-0 w-full z-50 bg-[#faf9f6]/80 dark:bg-slate-900/80 backdrop-blur-2xl shadow-[0_4px_40px_rgba(48,51,48,0.06)] dark:shadow-none font-['Plus_Jakarta_Sans'] tracking-tight antialiased">
-        <div className="flex justify-between items-center px-8 py-4 max-w-full mx-auto border-b bg-slate-50/50 dark:bg-slate-800/50 border-transparent">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined fill text-sky-600 dark:text-sky-400 text-3xl">school</span>
-            <span className="text-xl font-extrabold text-sky-900 dark:text-sky-100">UEC Luisa Cáceres de Arismendi</span>
-          </div>
+      <a
+        href="#contenido"
+        className="sr-only fixed left-4 top-4 z-[100] rounded-full bg-primary px-5 py-3 font-bold text-on-primary focus:not-sr-only"
+      >
+        Saltar al contenido
+      </a>
 
-          <nav className="hidden md:flex items-center gap-1">
+      <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6">
+        <div
+          className={`mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-3 rounded-[1.6rem] border px-3 transition-all duration-300 sm:px-5 ${
+            isScrolled
+              ? 'border-outline-variant/70 bg-background/92 shadow-[0_18px_40px_-28px_rgba(31,48,56,0.55)] backdrop-blur-xl'
+              : 'border-transparent bg-background/70 backdrop-blur-md'
+          }`}
+        >
+          <Logo />
+
+          <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Navegación principal">
             {NAV_LINKS.map((link) =>
               link.children ? (
-                <NavDropdown key={link.label} label={link.label} href={link.href} children={link.children} />
+                <NavDropdown
+                  key={link.label}
+                  label={link.label}
+                  href={link.href}
+                  items={link.children}
+                />
               ) : (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className={isActive(link.href)
-                    ? "text-sky-700 dark:text-sky-300 border-b-2 border-sky-600 dark:border-sky-400 pb-1 font-bold hover:bg-sky-50/50 dark:hover:bg-sky-900/20 rounded-full transition-all duration-300 px-4 py-2 active:scale-95 ease-in-out"
-                    : "text-slate-500 dark:text-slate-400 hover:text-sky-600 font-medium transition-colors hover:bg-sky-50/50 dark:hover:bg-sky-900/20 rounded-full transition-all duration-300 px-4 py-2"
-                  }
+                  aria-current={isActive(link.href) ? 'page' : undefined}
+                  className={`rounded-full px-3.5 py-2 text-sm font-bold transition-all duration-200 ${
+                    isActive(link.href)
+                      ? 'bg-primary-container text-on-primary-container shadow-[inset_0_-2px_0_rgba(12,108,139,0.16)]'
+                      : 'text-on-surface-variant hover:bg-primary-container/45 hover:text-primary'
+                  }`}
                 >
                   {link.label}
                 </Link>
-              )
+              ),
             )}
           </nav>
 
-          <div className="hidden md:flex items-center">
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle />
+
             <Link
               href="/login"
-              className="bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] px-6 py-2 rounded-full font-bold shadow-[inset_0_2px_0_rgba(255,255,255,0.2)] hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+              aria-label="Acceso administrativo"
+              title="Acceso administrativo"
+              className="hidden size-11 place-items-center rounded-full border border-outline-variant/60 text-on-surface-variant transition-colors hover:border-primary/40 hover:bg-primary-container/40 hover:text-primary md:grid"
             >
-              <span className="material-symbols-outlined text-[18px]">login</span>
-              Admin
+              <LockKeyhole className="size-[18px]" aria-hidden="true" />
             </Link>
-          </div>
 
-          {/* Botón hamburguesa */}
-          <button
-            onClick={() => setIsMenuOpen(true)}
-            className="md:hidden text-sky-600 p-2"
-            aria-label="Abrir menú"
-            aria-expanded={isMenuOpen}
-          >
-            <span className="material-symbols-outlined">menu</span>
-          </button>
+            <Link href="/admisiones" className="btn btn-primary btn-sm hidden sm:inline-flex">
+              Solicitar cupo
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(true)}
+              aria-label="Abrir menú"
+              aria-expanded={isMenuOpen}
+              aria-controls="menu-movil"
+              className="grid size-11 place-items-center rounded-full border border-outline-variant/60 text-on-surface-variant transition-colors hover:border-primary/40 hover:bg-primary-container/40 hover:text-primary lg:hidden"
+            >
+              <Menu className="size-5" aria-hidden="true" />
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Overlay oscuro detrás del drawer — ahora hermano del header, no hijo,
-          para que "fixed" se posicione respecto al viewport y no quede atrapado
-          por el backdrop-blur del header (filter/backdrop-filter crea un nuevo
-          containing block para descendientes fixed) */}
       <div
-        onClick={() => setIsMenuOpen(false)}
-        className={`fixed inset-0 z-40 bg-[#1a1c1a]/60 backdrop-blur-sm transition-opacity duration-300 md:hidden ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-          }`}
-      />
-
-      {/* Drawer mobile deslizante */}
-      <div
-        className={`fixed top-0 right-0 h-full w-[80%] max-w-sm bg-[#faf9f6] dark:bg-slate-900 shadow-[-8px_0_30px_rgba(48,51,48,0.25)] z-50 transform transition-transform duration-300 ease-in-out md:hidden overflow-y-auto ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
+        className={`fixed inset-0 z-[60] lg:hidden ${
+          isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
+        }`}
+        aria-hidden={!isMenuOpen}
+        inert={!isMenuOpen}
       >
-        <div className="flex justify-between items-center px-6 py-5 border-b border-[#b1b2af]/20">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined fill text-sky-600 text-2xl">school</span>
-            <span className="text-lg font-extrabold text-sky-900 dark:text-sky-100">Menú</span>
+        <button
+          type="button"
+          tabIndex={isMenuOpen ? 0 : -1}
+          onClick={() => setIsMenuOpen(false)}
+          aria-label="Cerrar menú"
+          className={`absolute inset-0 h-full w-full cursor-default bg-inverse-surface/55 backdrop-blur-sm transition-opacity duration-300 ${
+            isMenuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+
+        <aside
+          id="menu-movil"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menú principal"
+          className={`absolute right-0 top-0 flex h-full w-[88%] max-w-sm flex-col rounded-l-[2rem] border-l border-outline-variant/40 bg-background shadow-[-24px_0_60px_-30px_rgba(0,0,0,0.55)] transition-transform duration-300 ease-out ${
+            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="flex items-center justify-between border-b border-outline-variant/40 px-5 py-5">
+            <Logo />
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Cerrar menú"
+              className="grid size-11 place-items-center rounded-full border border-outline-variant/60 text-on-surface-variant transition-colors hover:bg-primary-container/50 hover:text-primary"
+            >
+              <X className="size-5" aria-hidden="true" />
+            </button>
           </div>
-          <button
-            onClick={() => setIsMenuOpen(false)}
-            className="text-slate-500 dark:text-slate-300 p-2 hover:bg-sky-50/50 dark:hover:bg-sky-900/20 rounded-full transition-colors"
-            aria-label="Cerrar menú"
-          >
-            <span className="material-symbols-outlined">close</span>
-          </button>
-        </div>
 
-        <nav className="flex flex-col gap-1 p-4">
-          {NAV_LINKS.map((link) =>
-            link.children ? (
-              <NavAccordionItem
-                key={link.label}
-                label={link.label}
-                href={link.href}
-                children={link.children}
-                onNavigate={() => setIsMenuOpen(false)}
-              />
-            ) : (
+          <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4" aria-label="Menú móvil">
+            {NAV_LINKS.map((link) => {
+              const Icon = link.icon;
+
+              return link.children ? (
+                <NavAccordionItem
+                  key={link.label}
+                  label={link.label}
+                  href={link.href}
+                  icon={Icon}
+                  items={link.children}
+                  onNavigate={() => setIsMenuOpen(false)}
+                />
+              ) : (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  aria-current={isActive(link.href) ? 'page' : undefined}
+                  className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 py-3 text-[0.95rem] font-bold transition-colors ${
+                    isActive(link.href)
+                      ? 'bg-primary-container text-on-primary-container'
+                      : 'text-on-surface-variant hover:bg-primary-container/40 hover:text-primary'
+                  }`}
+                >
+                  <span className="grid size-9 place-items-center rounded-xl bg-surface-container-high/70">
+                    <Icon className="size-[18px]" aria-hidden="true" />
+                  </span>
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="space-y-2 border-t border-outline-variant/40 p-4">
+            <Link
+              href="/admisiones"
+              onClick={() => setIsMenuOpen(false)}
+              className="btn btn-primary w-full"
+            >
+              Solicitar cupo
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+            <div className="flex items-center justify-between rounded-2xl bg-surface-container-low px-3 py-2">
+              <span className="text-xs font-bold text-on-surface-variant">
+                Acceso administrativo
+              </span>
               <Link
-                key={link.label}
-                href={link.href}
+                href="/login"
                 onClick={() => setIsMenuOpen(false)}
-                className={isActive(link.href)
-                  ? "text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-900/20 font-bold rounded-xl px-4 py-3 transition-colors"
-                  : "text-slate-600 dark:text-slate-300 font-medium hover:bg-sky-50/50 dark:hover:bg-sky-900/20 rounded-xl px-4 py-3 transition-colors"
-                }
+                className="grid size-9 place-items-center rounded-full text-primary transition-colors hover:bg-primary-container/60"
+                aria-label="Ir al inicio de sesión administrativo"
               >
-                {link.label}
+                <LockKeyhole className="size-4" aria-hidden="true" />
               </Link>
-            )
-          )}
-        </nav>
-
-        <div className="p-4 border-t border-[#b1b2af]/20 mt-2">
-          <Link
-            href="/login"
-            onClick={() => setIsMenuOpen(false)}
-            className="bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] px-6 py-3 rounded-full font-bold shadow-[inset_0_2px_0_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 w-full"
-          >
-            <span className="material-symbols-outlined text-[18px]">login</span>
-            Admin
-          </Link>
-        </div>
+            </div>
+          </div>
+        </aside>
       </div>
     </>
   );
