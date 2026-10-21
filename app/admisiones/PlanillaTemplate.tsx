@@ -12,7 +12,7 @@ interface PlanillaTemplateProps {
 }
 
 export const PlanillaTemplate = forwardRef<HTMLDivElement, PlanillaTemplateProps>(
-  ({ data }, ref) => {
+  function PlanillaTemplate({ data }, ref) {
     return (
       <div 
         ref={ref} 

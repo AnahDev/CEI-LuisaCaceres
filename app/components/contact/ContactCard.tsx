@@ -1,66 +1,77 @@
-import React from 'react';
+import type { LucideIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 
-// Definimos la estructura de cada fila de información (ej: un ícono de reloj + "Lunes a Viernes" + "7:00 AM - 1:00 PM")
 export interface ContactDetail {
-    icon: string;       // Ícono de Material Symbols (ej: 'location_on', 'schedule')
-    label: string;      // Título del dato (ej: 'Dirección', 'Horario')
-    value: string | React.ReactNode; // El valor (texto normal o elementos HTML si necesitas saltos de línea)
+  icon: LucideIcon;
+  label: string;
+  value: ReactNode;
 }
 
 export interface ContactCardProps {
-    title: string;
-    mainIcon: string;
-    details: ContactDetail[];
-    colorHex?: string;
+  title: string;
+  mainIcon: LucideIcon;
+  details: ContactDetail[];
+  tone?: 'primary' | 'secondary' | 'tertiary';
 }
 
+const TONES = {
+  primary: {
+    tile: 'bg-primary-container text-primary',
+    line: 'bg-primary',
+  },
+  secondary: {
+    tile: 'bg-secondary-container text-secondary',
+    line: 'bg-secondary',
+  },
+  tertiary: {
+    tile: 'bg-tertiary-container text-tertiary',
+    line: 'bg-tertiary',
+  },
+};
+
 export default function ContactCard({
-    title,
-    mainIcon,
-    details,
-    colorHex = "#006789" // Color Teal por defecto
+  title,
+  mainIcon: MainIcon,
+  details,
+  tone = 'primary',
 }: ContactCardProps) {
-    return (
-        <div
-            className="bg-white p-8 md:p-10 rounded-2xl shadow-[0_8px_30px_rgba(48,51,48,0.06)] flex flex-col gap-6 border-t-[6px] transition-transform hover:-translate-y-1 duration-300"
-            style={{ borderTopColor: colorHex }}
-        >
-            {/* Encabezado: Ícono principal y Título */}
-            <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-                <span
-                    className="material-symbols-outlined text-4xl"
-                    style={{ color: colorHex }}
-                >
-                    {mainIcon}
+  const palette = TONES[tone];
+
+  return (
+    <article className="card-clay relative overflow-hidden p-7 md:p-8">
+      <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1.5 ${palette.line}`} />
+
+      <div className="flex items-center gap-4 border-b border-outline-variant/40 pb-5">
+        <span className={`grid size-14 place-items-center rounded-2xl ${palette.tile}`}>
+          <MainIcon className="size-7" aria-hidden="true" />
+        </span>
+        <h2 className="font-display text-2xl font-extrabold leading-tight text-on-surface">
+          {title}
+        </h2>
+      </div>
+
+      <div className="mt-6 flex flex-col gap-5">
+        {details.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <div key={item.label} className="flex items-start gap-3.5">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-surface-container-low text-primary">
+                <Icon className="size-[18px]" aria-hidden="true" />
+              </span>
+
+              <div className="flex flex-col">
+                <span className="text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-on-surface-variant">
+                  {item.label}
                 </span>
-                <h3 className="text-2xl font-extrabold text-[#303330]">
-                    {title}
-                </h3>
+                <div className="mt-1 text-sm font-semibold leading-relaxed text-on-surface md:text-base">
+                  {item.value}
+                </div>
+              </div>
             </div>
-
-            {/* Lista de Detalles */}
-            <div className="flex flex-col gap-5 mt-2">
-                {details.map((item, index) => (
-                    <div key={index} className="flex items-start gap-4">
-                        {/* Ícono secundario */}
-                        <div className="bg-slate-50 p-2.5 rounded-full flex-shrink-0">
-                            <span className="material-symbols-outlined text-[#006789] text-xl block">
-                                {item.icon}
-                            </span>
-                        </div>
-
-                        {/* Texto */}
-                        <div className="flex flex-col mt-1">
-                            <span className="font-bold text-[#303330] text-sm uppercase tracking-wide mb-1">
-                                {item.label}
-                            </span>
-                            <div className="text-[#5d605c] leading-relaxed font-medium">
-                                {item.value}
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+          );
+        })}
+      </div>
+    </article>
+  );
 }

@@ -2,6 +2,7 @@ interface BottomActionBarProps {
   onSaveDraft: () => void;
   onPublish: () => void;
   publishing?: boolean;
+  savingDraft?: boolean;
   sidebarCollapsed: boolean;
 }
 
@@ -9,6 +10,7 @@ export default function BottomActionBar({
   onSaveDraft,
   onPublish,
   publishing = false,
+  savingDraft = false,
   sidebarCollapsed,
 }: BottomActionBarProps) {
   return (
@@ -22,14 +24,15 @@ export default function BottomActionBar({
         <button
           type="button"
           onClick={onSaveDraft}
-          className="px-6 py-3 rounded-full text-[#5d605c] font-['Plus_Jakarta_Sans'] font-semibold text-[0.875rem] hover:bg-[#e8e8e4] transition-colors focus:ring-2 focus:ring-[rgba(177,178,175,0.5)] outline-none"
+          disabled={savingDraft || publishing}
+          className="px-6 py-3 rounded-full text-[#5d605c] font-['Plus_Jakarta_Sans'] font-semibold text-[0.875rem] hover:bg-[#e8e8e4] transition-colors focus:ring-2 focus:ring-[rgba(177,178,175,0.5)] outline-none disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-transparent"
         >
-          Guardar como borrador
+          {savingDraft ? "Guardando…" : "Guardar como borrador"}
         </button>
         <button
           type="button"
           onClick={onPublish}
-          disabled={publishing}
+          disabled={publishing || savingDraft}
           className="px-8 py-3 rounded-full bg-gradient-to-r from-[#006789] to-[#62ccff] text-[#f4faff] font-['Plus_Jakarta_Sans'] font-bold text-[0.875rem] hover:opacity-90 active:scale-95 transition-all shadow-[inset_0_2px_4px_rgba(255,255,255,0.2)] shadow-[0_20px_40px_-10px_rgba(48,51,48,0.06)] flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[20px]">rocket_launch</span>

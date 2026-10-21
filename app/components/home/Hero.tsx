@@ -1,125 +1,239 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  HeartHandshake,
+  Pause,
+  Play,
+  Sparkles,
+} from 'lucide-react';
 
 const CAROUSEL_SLIDES = [
   {
     id: 1,
-    imageSrc: "/images/imagen 10.jpg",
-    alt: "Niños de la UEC Luisa Cáceres de Arismendi participando en actividades culturales",
-    title: "Educando con amor y valores",
-    description: "Un espacio seguro y estimulante donde cada niño descubre su potencial a través del juego y la exploración."
+    imageSrc: '/images/imagen 10.jpg',
+    alt: 'Niños de la UEC Luisa Cáceres de Arismendi participando en actividades culturales',
+    title: 'Educando con',
+    highlight: 'amor y valores',
+    description:
+      'Un espacio seguro y estimulante donde cada niño descubre su potencial a través del juego y la exploración.',
   },
   {
     id: 2,
-    imageSrc: "/images/imagen 3.jpg",
-    alt: "Niños jugando en las aulas del preescolar",
-    title: "Ambientes de aprendizaje",
-    description: "Fomentamos la curiosidad natural mediante dinámicas innovadoras diseñadas para el desarrollo cognitivo y motriz."
+    imageSrc: '/images/imagen 3.jpg',
+    alt: 'Niños jugando y aprendiendo en las aulas del preescolar',
+    title: 'Ambientes que despiertan',
+    highlight: 'curiosidad',
+    description:
+      'Fomentamos la curiosidad natural con dinámicas pensadas para el desarrollo cognitivo, social y motriz.',
   },
   {
     id: 3,
-    imageSrc: "/images/imagen 8.jpg",
-    alt: "Docentes guiando actividades recreativas",
-    title: "Atención y cuidado personalizado",
-    description: "Contamos con un equipo docente altamente calificado y comprometido con el bienestar emocional de tus pequeños."
-  }
+    imageSrc: '/images/imagen 8.jpg',
+    alt: 'Docentes acompañando actividades recreativas con los niños',
+    title: 'Cuidado cercano para',
+    highlight: 'crecer felices',
+    description:
+      'Un equipo docente comprometido con el bienestar emocional de tus pequeños y con cada familia.',
+  },
 ];
+
+const TRUST_IMAGES = ['/images/imagen 1.jpg', '/images/imagen 5.jpg', '/images/imagen 9.jpg'];
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Función para avanzar de diapositiva (enlazada en useCallback para optimizar rendimiento)
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev === CAROUSEL_SLIDES.length - 1 ? 0 : prev + 1));
   }, []);
 
-  // Función para retroceder de diapositiva
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev === 0 ? CAROUSEL_SLIDES.length - 1 : prev - 1));
-  };
+  }, []);
 
-  // // Efecto para el Auto-play automático (cambia cada 10 segundos)
-  // useEffect(() => {
-  //   const slideInterval = setInterval(nextSlide, 10000);
+  useEffect(() => {
+    if (isHovered || !isAutoPlaying) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  //   // Limpieza del intervalo cuando el componente se desmonte para prevenir fugas de memoria
-  //   return () => clearInterval(slideInterval);
-  // }, [nextSlide]);
+    const timer = window.setInterval(nextSlide, 8000);
+    return () => window.clearInterval(timer);
+  }, [isHovered, isAutoPlaying, nextSlide]);
+
+  const slide = CAROUSEL_SLIDES[currentSlide];
 
   return (
-    <section className="max-w-7xl mx-auto px-6 mb-24 mt-8 relative font-['Plus_Jakarta_Sans']">
-      <div className="relative rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(48,51,48,0.08)] bg-[#f4f4f0] h-[600px] flex items-center justify-center">
+    <section className="relative mx-auto w-full max-w-7xl px-4 pb-4 pt-2 sm:px-6 md:pt-4">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="blob-shape -left-10 top-24 h-52 w-52 bg-sun-container/80 blur-3xl" />
+        <div className="blob-shape -right-16 bottom-0 h-64 w-64 bg-primary-container/60 blur-3xl" />
+      </div>
 
-        {/* Renderizado dinámico de las imágenes con transiciones fluidas de opacidad */}
-        {CAROUSEL_SLIDES.map((slide, idx) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentSlide ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none'
+      <div
+        className="relative overflow-hidden rounded-[2rem] border-[6px] border-surface-container-lowest bg-surface-container-high shadow-[0_44px_90px_-46px_rgba(31,48,56,0.55)] md:rounded-[2.75rem]"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onFocusCapture={() => setIsHovered(true)}
+        onBlurCapture={() => setIsHovered(false)}
+      >
+        <div className="relative min-h-[600px] sm:min-h-[620px] md:min-h-[660px]">
+          {CAROUSEL_SLIDES.map((item, index) => (
+            <div
+              key={item.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
-          >
-            {/* Implementación nativa de <Image /> de Next.js para optimización automática */}
-            <Image
-              src={slide.imageSrc}
-              alt={slide.alt}
-              fill
-              priority={idx === 0} // Da prioridad de carga a la primera imagen
-              sizes="(max-width: 1280px) 100vw, 1280px"
-              className="object-cover rounded-xl"
-            />
-          </div>
-        ))}
-
-        {/* Capas superpuestas de gradiente difuminado (Overlays) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#006789]/80 to-transparent mix-blend-multiply rounded-xl z-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#006789]/60 to-transparent rounded-xl z-10"></div>
-
-        {/* Bloque de Contenido textual dinámico */}
-        <div className="relative z-20 text-center px-8 md:px-16 lg:w-2/3 mx-auto flex flex-col items-center gap-8">
-          <h1 className="font-extrabold text-5xl md:text-6xl lg:text-7xl text-[#ffffff] tracking-tight text-balance leading-tight drop-shadow-md transition-all duration-500">
-            {CAROUSEL_SLIDES[currentSlide].title}
-          </h1>
-          <p className="text-xl text-[#ffffff]/90 font-medium max-w-xl mx-auto text-balance transition-all duration-500">
-            {CAROUSEL_SLIDES[currentSlide].description}
-          </p>
-          {/* <button className="mt-4 bg-gradient-to-br from-[#f7a48b] to-[#f7a48b] text-[#5c2615] px-10 py-4 rounded-full font-bold text-lg shadow-[inset_0_2px_0_rgba(255,255,255,0.4),0_8px_20px_rgba(247,164,139,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
-            Conoce más
-            <span className="material-symbols-outlined font-bold">arrow_forward</span>
-          </button> */}
-        </div>
-
-        {/* Botón de control Izquierdo (Retroceder) */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-6 top-1/2 -translate-y-1/2 bg-[#faf9f6]/80 backdrop-blur-md p-3 rounded-full text-[#006789] hover:bg-[#faf9f6] hover:scale-110 active:scale-90 transition-all shadow-sm z-30 outline-none"
-          aria-label="Anterior diapositiva"
-        >
-          <span className="material-symbols-outlined">chevron_left</span>
-        </button>
-
-        {/* Botón de control Derecho (Avanzar) */}
-        <button
-          onClick={nextSlide}
-          className="absolute right-6 top-1/2 -translate-y-1/2 bg-[#faf9f6]/80 backdrop-blur-md p-3 rounded-full text-[#006789] hover:bg-[#faf9f6] hover:scale-110 active:scale-90 transition-all shadow-sm z-30 outline-none"
-          aria-label="Siguiente diapositiva"
-        >
-          <span className="material-symbols-outlined">chevron_right</span>
-        </button>
-
-        {/* Indicadores inferiores de posición (Puntos/Dots) */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-30">
-          {CAROUSEL_SLIDES.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentSlide(idx)}
-              className={`w-3 h-3 rounded-full shadow-sm transition-all duration-300 outline-none ${idx === currentSlide
-                ? 'bg-[#ffffff] scale-125'
-                : 'bg-[#ffffff]/50 hover:bg-[#ffffff]/80 cursor-pointer'
-                }`}
-              aria-label={`Ir a la diapositiva ${idx + 1}`}
-            />
+              aria-hidden={index !== currentSlide}
+            >
+              <Image
+                src={item.imageSrc}
+                alt={item.alt}
+                fill
+                priority={index === 0}
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                className={`object-cover ${index === currentSlide ? 'kenburns' : ''}`}
+              />
+            </div>
           ))}
+
+          <div className="absolute inset-0 bg-gradient-to-r from-[#03212c]/95 via-[#06303f]/70 to-[#06303f]/15" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#03212c]/85 via-transparent to-[#03212c]/25" />
+
+          <div className="relative z-10 flex min-h-[600px] flex-col justify-end px-6 pb-32 pt-24 sm:min-h-[620px] sm:px-8 md:min-h-[660px] md:px-14 md:pb-28 lg:px-16">
+            <div className="max-w-2xl">
+              <span className="inline-flex animate-rise items-center gap-2 rounded-full border border-white/25 bg-white/12 px-4 py-1.5 text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+                <Sparkles className="size-3.5 text-sun" aria-hidden="true" />
+                Inscripciones abiertas 2026–2027
+              </span>
+
+              <div key={slide.id} className="mt-5">
+                <h1 className="animate-rise delay-1 font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-tight text-balance text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.25)] sm:text-6xl lg:text-[4.4rem]">
+                  {slide.title}{' '}
+                  <span className="relative inline-block text-sun">
+                    {slide.highlight}
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 220 14"
+                      className="absolute -bottom-1 left-0 h-3 w-full text-sun/60"
+                      preserveAspectRatio="none"
+                    >
+                      <path
+                        d="M3 10C50 3 110 3 217 8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
+                </h1>
+
+                <p className="animate-rise delay-2 mt-5 max-w-xl text-base font-medium leading-relaxed text-white/90 sm:text-lg">
+                  {slide.description}
+                </p>
+              </div>
+
+              <div className="animate-rise delay-3 mt-8 flex flex-wrap items-center gap-3">
+                <Link href="/admisiones" className="btn btn-sun btn-lg">
+                  Solicitar cupo
+                  <ArrowRight className="size-5" aria-hidden="true" />
+                </Link>
+                <Link href="#nosotros" className="btn btn-glass btn-lg">
+                  <HeartHandshake className="size-5" aria-hidden="true" />
+                  Conócenos
+                </Link>
+              </div>
+
+              <div className="animate-rise delay-4 mt-8 flex items-center gap-3">
+                <div className="flex -space-x-3" aria-hidden="true">
+                  {TRUST_IMAGES.map((src) => (
+                    <span
+                      key={src}
+                      className="relative size-10 overflow-hidden rounded-full border-2 border-white/80 shadow-sm"
+                    >
+                      <Image src={src} alt="" fill sizes="40px" className="object-cover" />
+                    </span>
+                  ))}
+                </div>
+                <p className="max-w-[15rem] text-xs font-bold uppercase tracking-[0.12em] text-white/80">
+                  Familias que crecen con nosotros
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute bottom-5 right-5 z-20 flex flex-col items-end gap-3 sm:bottom-7 sm:right-7">
+            <div className="flex gap-2" role="group" aria-label="Controles del carrusel">
+              <button
+                type="button"
+                onClick={() => setIsAutoPlaying((current) => !current)}
+                aria-label={isAutoPlaying ? 'Pausar carrusel' : 'Reproducir carrusel'}
+                aria-pressed={!isAutoPlaying}
+                className="grid size-11 place-items-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur-md transition-all hover:bg-white/25 active:scale-95"
+              >
+                {isAutoPlaying ? (
+                  <Pause className="size-4" aria-hidden="true" />
+                ) : (
+                  <Play className="size-4" aria-hidden="true" />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={prevSlide}
+                aria-label="Diapositiva anterior"
+                className="grid size-11 place-items-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur-md transition-all hover:-translate-x-0.5 hover:bg-white/25 active:scale-95"
+              >
+                <ChevronLeft className="size-5" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={nextSlide}
+                aria-label="Siguiente diapositiva"
+                className="grid size-11 place-items-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur-md transition-all hover:translate-x-0.5 hover:bg-white/25 active:scale-95"
+              >
+                <ChevronRight className="size-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1">
+              {CAROUSEL_SLIDES.map((item, index) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setCurrentSlide(index)}
+                  aria-label={`Ir a la diapositiva ${index + 1}`}
+                  aria-current={index === currentSlide ? 'true' : undefined}
+                  className="grid size-11 place-items-center rounded-full"
+                >
+                  <span
+                    className={`block rounded-full transition-all duration-300 ${
+                      index === currentSlide
+                        ? 'h-2.5 w-8 bg-sun'
+                        : 'h-2.5 w-2.5 bg-white/50 hover:bg-white/80'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="absolute right-6 top-6 z-20 hidden rotate-3 items-center gap-3 rounded-2xl border border-white/40 bg-surface-container-lowest/95 px-4 py-3 text-on-surface shadow-[0_18px_36px_-20px_rgba(0,0,0,0.5)] backdrop-blur-md lg:flex">
+            <span className="grid size-10 place-items-center rounded-xl bg-sun-container text-on-sun-container">
+              <Sparkles className="size-5" aria-hidden="true" />
+            </span>
+            <span className="leading-tight">
+              <span className="block font-display text-sm font-extrabold">Cupos abiertos</span>
+              <span className="block text-[0.68rem] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
+                Año escolar 2026–2027
+              </span>
+            </span>
+          </div>
         </div>
       </div>
     </section>

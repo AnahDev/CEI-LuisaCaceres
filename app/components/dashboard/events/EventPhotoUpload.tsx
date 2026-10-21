@@ -2,17 +2,18 @@ import { useRef, type DragEvent } from "react";
 
 interface EventPhotoUploadProps {
   image: { url: string; alt: string } | null;
+  uploading?: boolean;
   onSelect: (file: File) => void;
   onRemove: () => void;
 }
 
-export default function EventPhotoUpload({ image, onSelect, onRemove }: EventPhotoUploadProps) {
+export default function EventPhotoUpload({ image, uploading = false, onSelect, onRemove }: EventPhotoUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file) onSelect(file);
+    if (file && !uploading) onSelect(file);
   };
 
   return (
@@ -21,7 +22,14 @@ export default function EventPhotoUpload({ image, onSelect, onRemove }: EventPho
         Fotografía <span className="text-[#ac3434]">*</span>
       </label>
 
-      {image ? (
+      {uploading ? (
+        <div className="w-full h-48 rounded-[1rem] bg-[#f4f4f0] flex flex-col items-center justify-center gap-2 text-[#5d605c]">
+          <span className="material-symbols-outlined text-3xl text-[#006789] animate-spin">
+            progress_activity
+          </span>
+          <p className="text-sm font-semibold">Subiendo fotografía…</p>
+        </div>
+      ) : image ? (
         <div className="relative w-full h-48 rounded-[1rem] overflow-hidden bg-[#eeeeea]">
           <img src={image.url} alt={image.alt} className="w-full h-full object-cover" />
           <div className="absolute top-2 right-2 flex gap-2">
@@ -54,18 +62,20 @@ export default function EventPhotoUpload({ image, onSelect, onRemove }: EventPho
             <span className="material-symbols-outlined text-2xl">cloud_upload</span>
           </div>
           <p className="text-sm font-medium text-[#303330]">Arrastra una foto o haz clic para elegirla</p>
-          <p className="text-xs text-[#5d605c] mt-1">JPG o PNG, máx. 10MB</p>
+          <p className="text-xs text-[#5d605c] mt-1">JPG, PNG o WebP, máx. 50 MB</p>
         </div>
       )}
 
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png"
+        accept="image/jpeg,image/png,image/webp"
         className="hidden"
+        disabled={uploading}
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) onSelect(file);
+          e.target.value = "";
         }}
       />
     </div>

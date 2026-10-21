@@ -1,17 +1,38 @@
-import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Baloo_2, Nunito } from "next/font/google";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import AppShell from "./components/layout/AppShell";
 import "./globals.css";
 
-const plusJakarta = Plus_Jakarta_Sans({
+const nunito = Nunito({
   subsets: ["latin"],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-plus-jakarta',
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-nunito",
+  display: "swap",
+});
+
+const baloo = Baloo_2({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-baloo",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "UEC Luisa Cáceres de Arismendi - Preescolar",
-  description: "Sistema de gestión y landing page del preescolar.",
+  title: "UEC Luisa Cáceres de Arismendi | Educación Inicial",
+  description:
+    "Un jardín de infancia donde los niños aprenden jugando, con amor, creatividad y acompañamiento cercano a cada familia.",
+  icons: {
+    icon: "/images/Logo.jpg",
+    apple: "/images/Logo.jpg",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fff9f0" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1b22" },
+  ],
 };
 
 export default function RootLayout({
@@ -20,14 +41,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${plusJakarta.variable} light`}>
+    <html
+      lang="es"
+      className={`${nunito.variable} ${baloo.variable}`}
+      suppressHydrationWarning
+    >
       <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-          rel="stylesheet"
-        />
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      {/* Usamos font-sans para que Tailwind detecte Plus Jakarta. Eliminamos pt-24 para no dañar el centrado del login */}
       <body className="font-sans antialiased min-h-screen flex flex-col">
         <AppShell>{children}</AppShell>
       </body>

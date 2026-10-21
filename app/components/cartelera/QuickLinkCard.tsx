@@ -1,41 +1,53 @@
-'use client';
-
 import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface QuickLinkCardProps {
-    icon: string;
-    title: string;
-    href: string;
-    iconColor: string; // ej: "text-[#006789]"
-    bgColor: string;   // ej: "bg-[#62ccff]/20"
+  icon: LucideIcon;
+  title: string;
+  href: string;
+  iconColor: string;
+  bgColor: string;
 }
 
-export default function QuickLinkCard({ icon, title, href, iconColor, bgColor }: QuickLinkCardProps) {
-    const isInternal = href.startsWith('/');
+export default function QuickLinkCard({
+  icon: Icon,
+  title,
+  href,
+  iconColor,
+  bgColor,
+}: QuickLinkCardProps) {
+  const isExternal = /^https?:\/\//.test(href);
 
-    const content = (
-        <>
-            <div className={`p-4 rounded-full ${bgColor} ${iconColor}`}>
-                <span className="material-symbols-outlined text-3xl">{icon}</span>
-            </div>
-            <span className="font-bold text-[#303330] text-sm">{title}</span>
-        </>
-    );
+  const content = (
+    <>
+      <span className={`icon-tile size-14 ${bgColor} ${iconColor}`} aria-hidden="true">
+        <Icon className="size-7" strokeWidth={2.1} />
+      </span>
+      <span className="font-display text-sm font-extrabold leading-snug text-on-surface">
+        {title}
+      </span>
+      <ArrowUpRight
+        className="absolute right-4 top-4 size-4 text-on-surface-variant/50 opacity-0 transition-opacity group-hover:opacity-100"
+        aria-hidden="true"
+      />
+    </>
+  );
 
-    const className =
-        "flex flex-col items-center gap-3 bg-[#ffffff] p-6 rounded-xl shadow-[0_2px_20px_rgba(48,51,48,0.04)] hover:-translate-y-1 transition-transform duration-300 text-center";
+  const className =
+    'card-clay group flex flex-col items-center gap-3 p-6 text-center';
 
-    if (isInternal) {
-        return (
-            <Link href={href} className={className}>
-                {content}
-            </Link>
-        );
-    }
-
+  if (!isExternal) {
     return (
-        <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
-            {content}
-        </a>
+      <Link href={href} className={className}>
+        {content}
+      </Link>
     );
+  }
+
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      {content}
+    </a>
+  );
 }

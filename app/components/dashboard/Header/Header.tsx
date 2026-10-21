@@ -6,9 +6,11 @@ interface HeaderProps {
   section: string;
   currentPage: string;
   avatarUrl: string;
+  userName: string;
+  onLogout: () => void;
 }
 
-export default function Header({ schoolName, section, currentPage, avatarUrl }: HeaderProps) {
+export default function Header({ schoolName, section, currentPage, avatarUrl, userName, onLogout }: HeaderProps) {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   return (
@@ -32,7 +34,7 @@ export default function Header({ schoolName, section, currentPage, avatarUrl }: 
         </nav>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <div className="relative">
           <button
             type="button"
@@ -50,9 +52,21 @@ export default function Header({ schoolName, section, currentPage, avatarUrl }: 
           {isHelpOpen && <HelpPanel onClose={() => setIsHelpOpen(false)} />}
         </div>
 
+        <span className="hidden md:block text-sm font-semibold text-[#303330]">{userName}</span>
+
         <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#faf9f6] shadow-sm ml-2">
-          <img className="w-full h-full object-cover" src={avatarUrl} alt="Foto de perfil del administrador" />
+          <img className="w-full h-full object-cover" src={avatarUrl} alt={`Foto de perfil de ${userName}`} />
         </div>
+
+        <button
+          type="button"
+          onClick={onLogout}
+          aria-label="Cerrar sesión"
+          title="Cerrar sesión"
+          className="p-2 rounded-full text-[#5d605c] hover:bg-[rgba(225,227,223,0.2)] transition-all active:opacity-80"
+        >
+          <span className="material-symbols-outlined">logout</span>
+        </button>
       </div>
     </header>
   );

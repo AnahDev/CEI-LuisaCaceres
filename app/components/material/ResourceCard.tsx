@@ -1,37 +1,72 @@
+import { Download, FileText } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
 interface ResourceCardProps {
-    icon: string;
-    title: string;
-    description: string;
-    href: string;
-    iconColor?: string;
-    bgColor?: string;
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  href: string;
+  tone?: 'primary' | 'secondary' | 'tertiary';
 }
 
+const TONES = {
+  primary: {
+    tile: 'bg-primary-container text-primary',
+    badge: 'bg-primary-container text-on-primary-container',
+  },
+  secondary: {
+    tile: 'bg-secondary-container text-secondary',
+    badge: 'bg-secondary-container text-on-secondary-container',
+  },
+  tertiary: {
+    tile: 'bg-tertiary-container text-tertiary',
+    badge: 'bg-tertiary-container text-on-tertiary-container',
+  },
+};
+
 export default function ResourceCard({
-    icon,
-    title,
-    description,
-    href,
-    iconColor = "text-[#006789]",
-    bgColor = "bg-[#62ccff]/20",
+  icon: Icon,
+  title,
+  description,
+  href,
+  tone = 'primary',
 }: ResourceCardProps) {
-    return (
-        <a
-            href={href}
-            download
-            className="flex flex-col gap-4 bg-[#ffffff] p-6 rounded-xl shadow-[0_2px_20px_rgba(48,51,48,0.04)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(48,51,48,0.08)] transition-all duration-300"
+  const palette = TONES[tone];
+
+  return (
+    <a
+      href={href}
+      download
+      className="card-clay group flex h-full flex-col gap-4 p-6"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <span className={`icon-tile size-14 ${palette.tile}`} aria-hidden="true">
+          <Icon className="size-7" strokeWidth={2.1} />
+        </span>
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.1em] ${palette.badge}`}
         >
-            <div className={`p-3 rounded-full w-max ${bgColor} ${iconColor}`}>
-                <span className="material-symbols-outlined text-3xl">{icon}</span>
-            </div>
-            <div className="flex flex-col gap-1.5">
-                <h3 className="font-extrabold text-lg text-[#303330] leading-snug">{title}</h3>
-                <p className="text-[#5d605c] text-sm leading-relaxed">{description}</p>
-            </div>
-            <span className="flex items-center gap-1 text-sm font-bold text-[#006789] mt-auto">
-                Descargar
-                <span className="material-symbols-outlined text-[18px]">download</span>
-            </span>
-        </a>
-    );
+          <FileText className="size-3.5" aria-hidden="true" />
+          PDF
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <h3 className="font-display text-lg font-extrabold leading-snug text-on-surface">
+          {title}
+        </h3>
+        <p className="text-sm font-medium leading-relaxed text-on-surface-variant">
+          {description}
+        </p>
+      </div>
+
+      <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-sm font-extrabold text-primary">
+        Descargar
+        <Download
+          className="size-4 transition-transform duration-300 group-hover:translate-y-0.5"
+          aria-hidden="true"
+        />
+      </span>
+    </a>
+  );
 }

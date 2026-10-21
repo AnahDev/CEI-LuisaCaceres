@@ -1,5 +1,9 @@
 export type ChannelId = "telegram" | "facebook" | "instagram";
 
+export type ChannelApiName = "TELEGRAM" | "FACEBOOK" | "INSTAGRAM";
+
+export type PostStatus = "DRAFT" | "PUBLISHED";
+
 export interface Channel {
   id: ChannelId;
   label: string;
@@ -12,9 +16,48 @@ export interface Channel {
 }
 
 export interface MediaItem {
-  id: string;
+  id: number;
   url: string;
   alt: string;
+}
+
+export interface PostMediaApi {
+  id: number;
+  url: string;
+  mimeType: string;
+  sizeBytes: number;
+  createdAt: string;
+}
+
+export interface PostChannelApi {
+  channel: ChannelApiName;
+  status: "PENDING" | "SENT" | "FAILED";
+  externalId: string | null;
+  errorMessage: string | null;
+  sentAt: string | null;
+}
+
+export interface PostApiResponse {
+  id: number;
+  slug: string;
+  title: string;
+  caption: string;
+  imageUrl: string;
+  media: PostMediaApi[];
+  channels: PostChannelApi[];
+  status: PostStatus;
+  publishedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
 }
 
 export interface NavItem {

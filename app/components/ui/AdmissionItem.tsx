@@ -1,3 +1,5 @@
+import { Check } from 'lucide-react';
+
 interface AdmissionItemProps {
   title: string;
   description: string;
@@ -5,11 +7,20 @@ interface AdmissionItemProps {
 
 export default function AdmissionItem({ title, description }: AdmissionItemProps) {
   return (
-    <div className="flex items-start gap-4">
-      <span className="material-symbols-outlined text-[#3c6942] font-bold bg-[#cbfecc]/50 p-1.5 rounded-full mt-0.5">check</span>
-      <div>
-        <h4 className="font-bold text-[#303330] text-lg">{title}</h4>
-        <p className="text-[#5d605c] text-sm mt-1">{description}</p>
+    <div className="flex items-start gap-3 rounded-2xl bg-surface-container-lowest/85 p-3.5">
+      <span
+        className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-secondary-container text-secondary"
+        aria-hidden="true"
+      >
+        <Check className="size-4" strokeWidth={3} />
+      </span>
+      <div className="min-w-0">
+        <h4 className="font-display text-sm font-extrabold leading-snug text-on-surface">
+          {title}
+        </h4>
+        <p className="mt-0.5 text-xs font-medium leading-relaxed text-on-surface-variant">
+          {description}
+        </p>
       </div>
     </div>
   );

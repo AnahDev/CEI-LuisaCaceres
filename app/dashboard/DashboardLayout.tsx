@@ -1,10 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { NAV_ITEMS } from "@/data/navigation";
 import Header from "@/app/components/dashboard/Header/Header";
 import Sidebar from "@/app/components/dashboard/Sidebar/Sidebar";
+import { clearSession, fetchCurrentUser, getToken } from "@/lib/auth";
+import type { AuthUser } from "@/types/auth";
 
 const SCHOOL_NAME = "UEC Luisa Cáceres";
 const LOGO_URL = "/images/Logo.jpg";
@@ -14,7 +16,6 @@ const PAGE_LABELS: Record<string, string> = {
   "/dashboard/schedule": "Publicaciones",
   "/dashboard/schedule/nueva-publicacion": "Nueva Publicación",
   "/dashboard/schedule/nuevo-evento": "Nuevo Evento",
-  "/dashboard/schedule/publicaciones": "Publicaciones",
 };
 
 const SidebarCollapsedContext = createContext(false);
@@ -25,7 +26,51 @@ export function useDashboardSidebarCollapsed() {
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    if (!getToken()) {
+      router.replace("/login");
+      return;
+    }
+
+    let active = true;
+    fetchCurrentUser()
+      .then((currentUser) => {
+        if (active) {
+          setUser(currentUser);
+        }
+      })
+      .catch(() => {
+        clearSession();
+        if (active) {
+          router.replace("/login");
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-[#f4f4f0] text-[#5d605c]">
+        <span className="material-symbols-outlined text-[32px] text-[#006789] animate-spin">
+          progress_activity
+        </span>
+        <p className="text-sm font-semibold tracking-tight">Verificando sesión…</p>
+      </div>
+    );
+  }
+
+  const handleLogout = () => {
+    clearSession();
+    router.replace("/login");
+  };
+
   const activeItem = NAV_ITEMS
     .filter(
       (item) =>
@@ -54,6 +99,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             section={section}
             currentPage={currentPage}
             avatarUrl={AVATAR_URL}
+            userName={user.fullName}
+            onLogout={handleLogout}
           />
           {children}
         </main>

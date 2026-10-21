@@ -1,23 +1,33 @@
 import { InputHTMLAttributes } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  icon: string;
+  icon: LucideIcon;
 }
 
-export default function FormInput({ label, icon, id, ...props }: FormInputProps) {
+export default function FormInput({
+  label,
+  icon: Icon,
+  id,
+  ...props
+}: FormInputProps) {
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="block text-xs font-bold uppercase tracking-widest text-[#5d605c] px-1">
+      <label
+        htmlFor={id}
+        className="block px-1 text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-on-surface-variant"
+      >
         {label}
       </label>
-      <div className="relative group">
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-[#797b78] group-focus-within:text-[#006789] transition-colors">
-          {icon}
-        </span>
-        <input 
+      <div className="group relative">
+        <Icon
+          className="pointer-events-none absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-on-surface-variant transition-colors group-focus-within:text-primary"
+          aria-hidden="true"
+        />
+        <input
           id={id}
-          className="w-full pl-12 pr-4 py-4 bg-[#e1e3df] rounded-lg border-none focus:ring-2 focus:ring-[#62ccff]/50 focus:bg-[#62ccff]/10 transition-all placeholder:text-[#b1b2af] font-medium text-[#303330]" 
+          className="w-full rounded-xl border border-outline-variant/60 bg-surface-container-low py-3.5 pl-12 pr-4 text-sm font-semibold text-on-surface transition-colors placeholder:text-on-surface-variant focus:border-primary focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20"
           {...props}
         />
       </div>

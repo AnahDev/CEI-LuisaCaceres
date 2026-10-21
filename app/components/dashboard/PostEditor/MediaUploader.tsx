@@ -4,16 +4,17 @@ import MediaThumbnail from "./MediaThumbnail";
 
 interface MediaUploaderProps {
   media: MediaItem[];
+  uploading?: boolean;
   onFilesSelected: (files: FileList) => void;
-  onRemove: (id: string) => void;
+  onRemove: (id: number) => void;
 }
 
-export default function MediaUploader({ media, onFilesSelected, onRemove }: MediaUploaderProps) {
+export default function MediaUploader({ media, uploading = false, onFilesSelected, onRemove }: MediaUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (e.dataTransfer.files?.length) onFilesSelected(e.dataTransfer.files);
+    if (!uploading && e.dataTransfer.files?.length) onFilesSelected(e.dataTransfer.files);
   };
 
   return (
@@ -28,33 +29,42 @@ export default function MediaUploader({ media, onFilesSelected, onRemove }: Medi
       <div
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => !uploading && inputRef.current?.click()}
         className="border-2 border-dashed border-[rgba(177,178,175,0.5)] rounded-[1rem] p-10 flex flex-col items-center justify-center text-center hover:bg-[rgba(244,244,240,0.5)] hover:border-[rgba(0,103,137,0.5)] transition-colors cursor-pointer group"
       >
         <input
           ref={inputRef}
           type="file"
           multiple
-          accept="image/jpeg,image/png,video/mp4"
+          accept="image/jpeg,image/png,image/webp,video/mp4"
           className="hidden"
-          onChange={(e) => e.target.files && onFilesSelected(e.target.files)}
+          disabled={uploading}
+          onChange={(e) => {
+            if (e.target.files) {
+              onFilesSelected(e.target.files);
+              e.target.value = "";
+            }
+          }}
         />
         <div className="w-16 h-16 bg-[#cbfecc] text-[#38643e] rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <span className="material-symbols-outlined text-3xl">cloud_upload</span>
+          <span className="material-symbols-outlined text-3xl">
+            {uploading ? "progress_activity" : "cloud_upload"}
+          </span>
         </div>
         <h3 className="font-['Plus_Jakarta_Sans'] text-[1.0625rem] font-medium text-[#303330] mb-1">
-          Arrastra y suelta tus archivos aquí
+          {uploading ? "Subiendo archivos…" : "Arrastra y suelta tus archivos aquí"}
         </h3>
         <p className="font-['Plus_Jakarta_Sans'] text-[0.875rem] text-[#5d605c] mb-6">
-          Soporta JPG, PNG, MP4 (Max. 50MB)
+          Soporta JPG, PNG, WebP y MP4 (máx. 50 MB)
         </p>
         <button
           type="button"
+          disabled={uploading}
           onClick={(e) => {
             e.stopPropagation();
             inputRef.current?.click();
           }}
-          className="px-6 py-2 rounded-full bg-[#e8e8e4] text-[#303330] font-medium text-[0.875rem] hover:bg-[#e1e3df] transition-colors"
+          className="px-6 py-2 rounded-full bg-[#e8e8e4] text-[#303330] font-medium text-[0.875rem] hover:bg-[#e1e3df] transition-colors disabled:opacity-60"
         >
           Explorar Archivos
         </button>

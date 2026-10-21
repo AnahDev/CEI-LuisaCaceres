@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, InputHTMLAttributes } from 'react';
+import { Eye, EyeOff, LockKeyhole } from 'lucide-react';
 
 interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -11,27 +12,34 @@ export default function PasswordInput({ label, id, ...props }: PasswordInputProp
 
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="block text-xs font-bold uppercase tracking-widest text-[#5d605c] px-1">
+      <label
+        htmlFor={id}
+        className="block px-1 text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-on-surface-variant"
+      >
         {label}
       </label>
-      <div className="relative group">
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-[#797b78] group-focus-within:text-[#006789] transition-colors">
-          lock
-        </span>
-        <input 
+      <div className="group relative">
+        <LockKeyhole
+          className="pointer-events-none absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-on-surface-variant transition-colors group-focus-within:text-primary"
+          aria-hidden="true"
+        />
+        <input
           id={id}
-          type={showPassword ? "text" : "password"}
-          className="w-full pl-12 pr-12 py-4 bg-[#e1e3df] rounded-lg border-none focus:ring-2 focus:ring-[#62ccff]/50 focus:bg-[#62ccff]/10 transition-all placeholder:text-[#b1b2af] font-medium text-[#303330]" 
+          type={showPassword ? 'text' : 'password'}
+          className="w-full rounded-xl border border-outline-variant/60 bg-surface-container-low py-3.5 pl-12 pr-12 text-sm font-semibold text-on-surface transition-colors placeholder:text-on-surface-variant focus:border-primary focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20"
           {...props}
         />
-        <button 
-          type="button" 
-          onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#b1b2af] hover:text-[#303330] transition-colors outline-none"
+        <button
+          type="button"
+          onClick={() => setShowPassword((current) => !current)}
+          aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          className="absolute right-2 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full text-on-surface-variant transition-colors hover:bg-primary-container/50 hover:text-primary"
         >
-          <span className="material-symbols-outlined">
-            {showPassword ? 'visibility_off' : 'visibility'}
-          </span>
+          {showPassword ? (
+            <EyeOff className="size-[18px]" aria-hidden="true" />
+          ) : (
+            <Eye className="size-[18px]" aria-hidden="true" />
+          )}
         </button>
       </div>
     </div>
