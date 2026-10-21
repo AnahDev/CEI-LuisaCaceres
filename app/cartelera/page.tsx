@@ -1,197 +1,144 @@
-import Link from 'next/link';
-import {
-  ArrowRight,
-  BookOpen,
-  CalendarDays,
-  ExternalLink,
-  Mail,
-  Newspaper,
-  Palette,
-  Star,
-} from 'lucide-react';
-import EventItem from '../components/cartelera/EventItem';
-import EfemerideCard from '../components/cartelera/EfemerideCard';
-import QuickLinkCard from '../components/cartelera/QuickLinkCard';
-import UrgentBanner from '../components/cartelera/UrgentBanner';
-import PageHero from '../components/ui/PageHero';
-import SectionHeading from '../components/ui/SectionHeading';
-import Reveal from '../components/ui/Reveal';
-
-const AVISO_URGENTE = {
-  active: true,
-  text: 'Reunión de padres y representantes: viernes 15 de agosto, 8:00 AM en el auditorio principal.',
-};
-
-const EVENTOS = [
-  {
-    day: '15',
-    month: 'Ago',
-    title: 'Reunión de Padres',
-    category: 'Reunión',
-    categoryColor: 'bg-primary-container text-on-primary-container',
-  },
-  {
-    day: '22',
-    month: 'Ago',
-    title: 'Examen de Matemática',
-    category: 'Exámenes',
-    categoryColor: 'bg-tertiary-container text-on-tertiary-container',
-  },
-  {
-    day: '05',
-    month: 'Sep',
-    title: 'Olimpiadas Deportivas',
-    category: 'Deportivo',
-    categoryColor: 'bg-secondary-container text-on-secondary-container',
-  },
-  {
-    day: '12',
-    month: 'Sep',
-    title: 'Día Feriado — Independencia',
-    category: 'Feriado',
-    categoryColor: 'bg-surface-container-high text-on-surface-variant',
-  },
-];
-
-const EFEMERIDES = [
-  {
-    image: '/images/imagen 6.jpg',
-    day: '22',
-    month: 'Abr',
-    title: 'Día de la Tierra',
-    description:
-      'Reflexionamos junto a nuestros alumnos sobre el cuidado del planeta y la naturaleza.',
-  },
-  {
-    image: '/images/imagen 8.jpg',
-    day: '15',
-    month: 'Jul',
-    title: 'Batalla de Carabobo',
-    description:
-      'Conmemoramos uno de los hechos históricos más importantes de la independencia venezolana.',
-  },
-  {
-    image: '/images/imagen 9.jpg',
-    day: '12',
-    month: 'Oct',
-    title: 'Resistencia Indígena',
-    description:
-      'Honramos la memoria y el legado de nuestros pueblos originarios.',
-  },
-];
+import { BookOpen, Mail, Palette } from "lucide-react";
+import EfemerideCard from "../components/cartelera/EfemerideCard";
+import PostCard from "../components/cartelera/PostCard";
+import QuickLinkCard from "../components/cartelera/QuickLinkCard";
+import SchoolCalendar from "../components/cartelera/SchoolCalendar";
+import UrgentBanner from "../components/cartelera/UrgentBanner";
+import { addDaysIso, eventCalendarDate, monthQueryRange, splitIsoDate, todayCalendarDate } from "@/lib/date";
+import { listPublishedEvents } from "@/lib/events";
+import { listPublishedPosts } from "@/lib/posts";
+import type { EventApiResponse } from "@/types/event";
+import type { PostApiResponse } from "@/types/post";
 
 const ENLACES = [
-  {
-    icon: Mail,
-    title: 'Correo Institucional',
-    href: 'mailto:info@luisacaceres.edu.ve',
-    iconColor: 'text-tertiary',
-    bgColor: 'bg-tertiary-container',
-  },
-  {
-    icon: BookOpen,
-    title: 'Libros Didácticos',
-    href: '/material/libros-didacticos',
-    iconColor: 'text-primary',
-    bgColor: 'bg-primary-container',
-  },
-  {
-    icon: Palette,
-    title: 'Para Pintar',
-    href: '/material/para-pintar',
-    iconColor: 'text-secondary',
-    bgColor: 'bg-secondary-container',
-  },
+    { icon: Mail, title: "Correo Institucional", href: "#", iconColor: "text-tertiary", bgColor: "bg-tertiary-container/20" },
+    { icon: BookOpen, title: "Libros Didácticos", href: "/material/libros-didacticos", iconColor: "text-primary", bgColor: "bg-primary-container/20" },
+    { icon: Palette, title: "Para Pintar", href: "/material/para-pintar", iconColor: "text-tertiary", bgColor: "bg-tertiary-container/20" },
 ];
 
-export default function CarteleraPage() {
-  return (
-    <main className="flex-grow">
-      <PageHero
-        badge="Publicaciones"
-        title={
-          <>
-            Cartelera <span className="text-tertiary">informativa</span>
-          </>
-        }
-        description="Novedades, fechas importantes y recursos para acompañar el día a día de nuestras familias."
-        icon={Newspaper}
-        tone="primary"
-      />
+const EPHEMERIS_LIMIT = 3;
 
-      <UrgentBanner notice={AVISO_URGENTE} />
+async function fetchPublishedPosts(): Promise<PostApiResponse[]> {
+    try {
+        const page = await listPublishedPosts(0, 6);
+        return page.content;
+    } catch {
+        return [];
+    }
+}
 
-      <div className="mx-auto w-full max-w-7xl px-6">
-        <section className="py-14 md:py-16">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Calendario escolar"
-              title="Fechas para no perderse"
-              description="Organiza la agenda familiar con nuestros próximos encuentros y actividades."
-              icon={CalendarDays}
-              align="left"
-              tone="primary"
-            />
-          </Reveal>
+async function fetchPublishedEvents(
+    params: Parameters<typeof listPublishedEvents>[0]
+): Promise<EventApiResponse[]> {
+    try {
+        return await listPublishedEvents(params);
+    } catch {
+        return [];
+    }
+}
 
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-            {EVENTOS.map((evento, index) => (
-              <Reveal key={evento.title} delay={index * 70}>
-                <EventItem {...evento} />
-              </Reveal>
-            ))}
-          </div>
-        </section>
+export default async function CarteleraPage() {
+    const today = todayCalendarDate();
+    const year = Number(today.slice(0, 4));
+    const month = Number(today.slice(5, 7)) - 1;
+    const monthRange = monthQueryRange(year, month);
 
-        <section className="border-t border-outline-variant/40 py-14 md:py-16">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Efemérides"
-              title="Fechas que nos unen"
-              description="Momentos para recordar, aprender y compartir en comunidad."
-              icon={Star}
-              align="left"
-              tone="tertiary"
-            />
-          </Reveal>
+    const [posts, monthEvents, ephemerides, featuredEvents] = await Promise.all([
+        fetchPublishedPosts(),
+        fetchPublishedEvents(monthRange),
+        fetchPublishedEvents({
+            from: `${year}-01-01T00:00:00Z`,
+            to: `${year}-12-31T23:59:59Z`,
+            kind: "EPHEMERIS",
+        }),
+        fetchPublishedEvents({
+            from: `${today}T00:00:00Z`,
+            to: `${addDaysIso(today, 120)}T23:59:59Z`,
+            featured: true,
+        }),
+    ]);
 
-          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
-            {EFEMERIDES.map((efemeride, index) => (
-              <Reveal key={efemeride.title} delay={index * 90}>
-                <EfemerideCard {...efemeride} />
-              </Reveal>
-            ))}
-          </div>
-        </section>
+    const ephemerisWithImage = ephemerides.filter((event) => Boolean(event.imageUrl));
+    const now = new Date().toISOString();
+    const upcomingEphemerides = ephemerisWithImage.filter((event) => event.endsAt >= now);
+    const visibleEphemerides = (upcomingEphemerides.length > 0 ? upcomingEphemerides : ephemerisWithImage)
+        .slice(0, EPHEMERIS_LIMIT);
 
-        <section className="border-t border-outline-variant/40 py-14 md:py-16">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <Reveal>
-              <SectionHeading
-                eyebrow="Recursos"
-                title="Enlaces de interés"
-                description="Material y canales listos para ti."
-                icon={ExternalLink}
-                align="left"
-                tone="secondary"
-              />
-            </Reveal>
+    const urgentEvent = featuredEvents[0];
 
-            <Link href="/contacto" className="btn btn-ghost btn-sm w-fit">
-              ¿Necesitas ayuda?
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
-          </div>
+    return (
+        <main className="pt-24 pb-24 font-['Plus_Jakarta_Sans']">
+            {urgentEvent && (
+                <UrgentBanner
+                    notice={{
+                        active: true,
+                        text: urgentEvent.description ?? urgentEvent.title,
+                    }}
+                />
+            )}
 
-          <div className="mt-8 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
-            {ENLACES.map((enlace, index) => (
-              <Reveal key={enlace.title} delay={index * 80}>
-                <QuickLinkCard {...enlace} />
-              </Reveal>
-            ))}
-          </div>
-        </section>
-      </div>
-    </main>
-  );
+            <div className="max-w-7xl mx-auto px-6">
+                <div className="mt-12 mb-16 text-center flex flex-col items-center gap-4">
+                    <div className="inline-block bg-secondary-container/50 text-on-secondary-container px-4 py-1.5 rounded-full text-sm font-bold tracking-wide w-max border border-secondary-container">
+                        Publicaciones
+                    </div>
+                    <h1 className="font-extrabold text-4xl md:text-5xl text-primary tracking-tight">
+                        Cartelera Informativa
+                    </h1>
+                    <p className="text-on-surface-variant text-lg max-w-2xl">
+                        Mantente al día con las novedades, fechas importantes y recursos de nuestra institución.
+                    </p>
+                </div>
+
+                {posts.length > 0 && (
+                    <section className="mb-20">
+                        <div className="mb-6 flex items-end justify-between gap-4">
+                            <h2 className="font-extrabold text-2xl md:text-3xl text-on-surface">
+                                Últimas publicaciones
+                            </h2>
+                        </div>
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            {posts.map((post) => (
+                                <PostCard key={post.id} post={post} />
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                <div className="mb-20">
+                    <SchoolCalendar initialEvents={monthEvents} />
+                </div>
+
+                {visibleEphemerides.length > 0 && (
+                    <section className="mb-20">
+                        <h2 className="font-extrabold text-2xl md:text-3xl text-on-surface mb-6">Efemérides</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {visibleEphemerides.map((event) => {
+                                const { day, month: monthLabel } = splitIsoDate(eventCalendarDate(event));
+                                return (
+                                    <EfemerideCard
+                                        key={event.id}
+                                        image={event.imageUrl ?? ""}
+                                        day={day}
+                                        month={monthLabel}
+                                        title={event.title}
+                                        description={event.description ?? ""}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </section>
+                )}
+
+                <section>
+                    <h2 className="font-extrabold text-2xl md:text-3xl text-on-surface mb-6">Enlaces de Interés</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        {ENLACES.map((enlace, idx) => (
+                            <QuickLinkCard key={idx} {...enlace} />
+                        ))}
+                    </div>
+                </section>
+            </div>
+        </main>
+    );
 }
