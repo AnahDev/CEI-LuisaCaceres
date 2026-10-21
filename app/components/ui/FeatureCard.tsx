@@ -1,19 +1,40 @@
+import type { LucideIcon } from 'lucide-react';
+
 interface FeatureCardProps {
-  icon: string;
+  icon: LucideIcon;
   iconColor: string;
   iconBg: string;
   title: string;
   description: string;
 }
 
-export default function FeatureCard({ icon, iconColor, iconBg, title, description }: FeatureCardProps) {
+export default function FeatureCard({
+  icon: Icon,
+  iconColor,
+  iconBg,
+  title,
+  description,
+}: FeatureCardProps) {
   return (
-    <div className="bg-[#ffffff] p-8 rounded-xl shadow-[0_4px_20px_rgba(48,51,48,0.03)] hover:-translate-y-2 transition-transform duration-300 group border border-[#b1b2af]/10">
-      <div className={`${iconBg} w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-        <span className={`material-symbols-outlined text-3xl ${iconColor} fill`}>{icon}</span>
+    <article className="card-clay group flex h-full flex-col p-6 md:p-7">
+      <div
+        className={`icon-tile mb-6 size-14 shrink-0 ${iconBg} ${iconColor}`}
+        aria-hidden="true"
+      >
+        <Icon className="size-7" strokeWidth={2.2} />
       </div>
-      <h3 className="font-bold text-xl text-[#303330] mb-3">{title}</h3>
-      <p className="text-[#5d605c] leading-relaxed">{description}</p>
-    </div>
+
+      <h3 className="font-display text-xl font-extrabold leading-snug text-on-surface">
+        {title}
+      </h3>
+      <p className="mt-2.5 text-sm font-medium leading-relaxed text-on-surface-variant">
+        {description}
+      </p>
+
+      <span
+        aria-hidden="true"
+        className={`absolute right-5 top-5 size-2.5 rounded-full ${iconBg} opacity-80`}
+      />
+    </article>
   );
 }
