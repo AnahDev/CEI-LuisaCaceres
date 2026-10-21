@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ArrowRight, CircleAlert, Mail } from 'lucide-react';
 import FormInput from '../ui/FormInput';
 import PasswordInput from '../ui/PasswordInput';
 import SubmitButton from '../ui/SubmitButton';
@@ -34,13 +35,13 @@ export default function LoginForm() {
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
+    <form className="space-y-5" onSubmit={handleSubmit}>
       <FormInput
         id="email"
         name="email"
         type="email"
         label="Correo electrónico"
-        icon="mail"
+        icon={Mail}
         placeholder="admin@ueclca.edu.ve"
         autoComplete="email"
         required
@@ -58,15 +59,15 @@ export default function LoginForm() {
       {error && (
         <div
           role="alert"
-          className="flex items-start gap-3 rounded-lg border border-[#f7a48b]/40 bg-[#f7a48b]/15 px-4 py-3 text-sm font-medium text-[#8a3b23]"
+          className="flex items-start gap-3 rounded-xl border border-error/30 bg-error-container/40 px-4 py-3 text-sm font-semibold text-on-error-container"
         >
-          <span className="material-symbols-outlined text-[20px]">error</span>
+          <CircleAlert className="mt-0.5 size-[18px] shrink-0 text-error" aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}
 
-      <SubmitButton type="submit" icon={pending ? undefined : 'arrow_forward'} disabled={pending}>
-        {pending ? 'Ingresando…' : 'Iniciar Sesión'}
+      <SubmitButton type="submit" icon={pending ? undefined : ArrowRight} disabled={pending}>
+        {pending ? 'Ingresando…' : 'Iniciar sesión'}
       </SubmitButton>
     </form>
   );

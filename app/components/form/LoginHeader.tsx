@@ -1,20 +1,28 @@
+import Image from 'next/image';
+import { BadgeCheck } from 'lucide-react';
+
 export default function LoginHeader() {
   return (
-    <div className="text-center mb-10">
-      <div className="inline-block p-4 rounded-full bg-[#f4f4f0] mb-6 relative">
-        <img 
-          alt="UEC Luisa Cáceres de Arismendi Logo" 
-          className="w-20 h-20 rounded-full object-cover shadow-sm" 
-          src="/images/Logo.jpg"
-        />
-        <div className="absolute -bottom-1 -right-1 bg-[#cbfecc] p-1.5 rounded-full border-4 border-[#ffffff]">
-          <span className="material-symbols-outlined text-[#3c6942] text-[16px] fill">verified_user</span>
-        </div>
+    <div className="mb-8 text-center">
+      <div className="relative mb-5 inline-block">
+        <span className="grid size-20 place-items-center overflow-hidden rounded-[1.5rem] border-4 border-surface-container-lowest bg-surface-container-low shadow-[0_12px_28px_-16px_rgba(31,48,56,0.5)]">
+          <Image
+            src="/images/Logo.jpg"
+            alt="Logotipo de UEC Luisa Cáceres de Arismendi"
+            width={80}
+            height={80}
+            className="size-full object-cover"
+          />
+        </span>
+        <span className="absolute -bottom-1.5 -right-1.5 grid size-8 place-items-center rounded-full border-4 border-surface-container-lowest bg-secondary-container text-secondary">
+          <BadgeCheck className="size-4" aria-hidden="true" />
+        </span>
       </div>
-      <h1 className="text-[#303330] text-2xl font-extrabold tracking-tight mb-2">
+
+      <h1 className="font-display text-3xl font-extrabold tracking-tight text-on-surface">
         Panel de Administración
       </h1>
-      <p className="text-[#5d605c] text-sm font-medium">
+      <p className="mt-2 text-sm font-semibold text-on-surface-variant">
         Bienvenido de nuevo a UEC Luisa Cáceres de Arismendi
       </p>
     </div>

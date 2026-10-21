@@ -1,24 +1,25 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 interface SubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  icon?: string;
+  icon?: LucideIcon;
 }
 
-export default function SubmitButton({ children, icon, ...props }: SubmitButtonProps) {
+export default function SubmitButton({
+  children,
+  icon: Icon,
+  ...props
+}: SubmitButtonProps) {
   return (
-    <div className="pt-2">
-      <button 
-        className="w-full py-4 px-6 bg-gradient-to-br from-[#006789] to-[#62ccff] text-[#f4faff] font-bold rounded-full shadow-lg shadow-[#62ccff]/20 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group disabled:opacity-60 disabled:pointer-events-none"
-        {...props}
-      >
-        <span>{children}</span>
-        {icon && (
-          <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">
-            {icon}
-          </span>
-        )}
-      </button>
-    </div>
+    <button className="btn btn-primary w-full disabled:pointer-events-none disabled:opacity-60" {...props}>
+      <span>{children}</span>
+      {Icon && (
+        <Icon
+          className="size-5 transition-transform duration-300 group-hover:translate-x-1"
+          aria-hidden="true"
+        />
+      )}
+    </button>
   );
 }
