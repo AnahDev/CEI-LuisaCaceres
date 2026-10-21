@@ -6,31 +6,27 @@ import ContentEditor from "./PostEditor/ContentEditor";
 import MediaUploader from "./PostEditor/MediaUploader";
 import PreviewPanel from "./Preview/PreviewPanel";
 import BottomActionBar from "./BottomActionBar";
+import PublishedBanner from "./events/PublishedBanner";
+import DraftSavedBanner from "./events/DraftSavedBanner";
 import { useDashboardSidebarCollapsed } from "@/app/dashboard/DashboardLayout";
 import { CHANNELS, DEFAULT_SELECTED_CHANNELS, MAX_POST_LENGTH } from "@/data/channels";
+import { ApiError } from "@/lib/api";
+import { changePostStatus, createPost, uploadMedia } from "@/lib/posts";
 import type { ChannelId, MediaItem } from "@/types/post";
 
 const SCHOOL_NAME = "UEC Luisa Cáceres";
-const SAMPLE_MEDIA_URL =
-  "images/prueba.jpg";
-
-const INITIAL_MEDIA: MediaItem[] = [
-  {
-    id: "media-1",
-    url: SAMPLE_MEDIA_URL,
-    alt: "Aula de preescolar moderna con juguetes Montessori de madera y luz natural",
-  },
-];
-
-const INITIAL_CONTENT =
-  "¡Feliz inicio de semana a toda nuestra comunidad escolar! 🌟\n\nRecordamos que esta semana inician las inscripciones para las actividades extracurriculares.";
 
 export default function Dashboard() {
   const [selectedChannels, setSelectedChannels] = useState<ChannelId[]>(DEFAULT_SELECTED_CHANNELS);
   const [activePreviewChannel, setActivePreviewChannel] = useState<ChannelId>("telegram");
-  const [content, setContent] = useState(INITIAL_CONTENT);
-  const [media, setMedia] = useState<MediaItem[]>(INITIAL_MEDIA);
+  const [content, setContent] = useState("");
+  const [media, setMedia] = useState<MediaItem[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [justPublished, setJustPublished] = useState(false);
+  const [draftSaved, setDraftSaved] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isSidebarCollapsed = useDashboardSidebarCollapsed();
 
   const timestamp = useMemo(
@@ -44,29 +40,99 @@ export default function Dashboard() {
     );
   };
 
-  const handleFilesSelected = (files: FileList) => {
-    const newItems: MediaItem[] = Array.from(files).map((file, index) => ({
-      id: `media-${Date.now()}-${index}`,
-      url: URL.createObjectURL(file),
-      alt: file.name,
-    }));
-    setMedia((prev) => [...prev, ...newItems]);
+  const handleFilesSelected = async (files: FileList) => {
+    const list = Array.from(files);
+    if (!list.length) return;
+
+    setIsUploading(true);
+    setErrorMessage(null);
+    try {
+      const uploaded = await Promise.all(
+        list.map(async (file) => ({ file, asset: await uploadMedia(file) }))
+      );
+      setMedia((prev) => [
+        ...prev,
+        ...uploaded.map(({ file, asset }) => ({
+          id: asset.id,
+          url: asset.url,
+          alt: file.name,
+        })),
+      ]);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof ApiError ? error.message : "No se pudieron subir los archivos."
+      );
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  const handleRemoveMedia = (id: string) => {
+  const handleRemoveMedia = (id: number) => {
     setMedia((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const handleSaveDraft = () => {
-    // Delegate persistence to whatever the app wires in (API call, local storage, etc.)
-    console.log("Guardar borrador", { selectedChannels, content, media });
+  const validate = (): string | null => {
+    if (!content.trim()) return "Escribe el mensaje de la publicación.";
+    if (selectedChannels.length === 0) return "Selecciona al menos un canal.";
+    if (media.length === 0) return "Adjunta al menos una imagen para la portada.";
+    return null;
+  };
+
+  const resetForm = () => {
+    setContent("");
+    setMedia([]);
+  };
+
+  const handleSaveDraft = async () => {
+    const validationError = validate();
+    if (validationError) {
+      setErrorMessage(validationError);
+      return;
+    }
+
+    setIsSavingDraft(true);
+    setErrorMessage(null);
+    setJustPublished(false);
+    try {
+      await createPost({
+        caption: content,
+        channels: selectedChannels,
+        mediaIds: media.map((item) => item.id),
+      });
+      resetForm();
+      setDraftSaved(true);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof ApiError ? error.message : "No se pudo guardar el borrador."
+      );
+    } finally {
+      setIsSavingDraft(false);
+    }
   };
 
   const handlePublish = async () => {
+    const validationError = validate();
+    if (validationError) {
+      setErrorMessage(validationError);
+      return;
+    }
+
     setIsPublishing(true);
+    setErrorMessage(null);
+    setDraftSaved(false);
     try {
-      // Delegate the actual publish request to a service layer / API route.
-      console.log("Publicar", { selectedChannels, content, media });
+      const created = await createPost({
+        caption: content,
+        channels: selectedChannels,
+        mediaIds: media.map((item) => item.id),
+      });
+      await changePostStatus(created.id, "PUBLISHED");
+      resetForm();
+      setJustPublished(true);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof ApiError ? error.message : "No se pudo publicar la publicación."
+      );
     } finally {
       setIsPublishing(false);
     }
@@ -80,9 +146,28 @@ export default function Dashboard() {
             Crear Publicación
           </h1>
           <p className="font-['Plus_Jakarta_Sans'] text-[1.0625rem] text-[#5d605c] leading-relaxed">
-            Redacta y programa contenido para tus redes sociales y canales de comunicación escolares.
+            Redacta y programa contenido para tus redes sociales y la cartelera del colegio.
           </p>
         </div>
+
+        {errorMessage && (
+          <div className="mb-8 max-w-2xl flex items-start gap-3 bg-[#fbeaea] border border-[#e9b8b8] text-[#ac3434] rounded-[1rem] px-5 py-4">
+            <span className="material-symbols-outlined text-[20px]">error</span>
+            <p className="text-sm font-semibold">{errorMessage}</p>
+          </div>
+        )}
+
+        {justPublished && (
+          <div className="mb-8 max-w-2xl">
+            <PublishedBanner onDismiss={() => setJustPublished(false)} />
+          </div>
+        )}
+
+        {draftSaved && (
+          <div className="mb-8 max-w-2xl">
+            <DraftSavedBanner onDismiss={() => setDraftSaved(false)} />
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           <div className="lg:col-span-7 space-y-8">
@@ -90,7 +175,12 @@ export default function Dashboard() {
 
             <ContentEditor value={content} onChange={setContent} maxLength={MAX_POST_LENGTH} />
 
-            <MediaUploader media={media} onFilesSelected={handleFilesSelected} onRemove={handleRemoveMedia} />
+            <MediaUploader
+              media={media}
+              uploading={isUploading}
+              onFilesSelected={handleFilesSelected}
+              onRemove={handleRemoveMedia}
+            />
           </div>
 
           <div className="lg:col-span-5 space-y-8">
@@ -111,6 +201,7 @@ export default function Dashboard() {
         onSaveDraft={handleSaveDraft}
         onPublish={handlePublish}
         publishing={isPublishing}
+        savingDraft={isSavingDraft}
         sidebarCollapsed={isSidebarCollapsed}
       />
     </>

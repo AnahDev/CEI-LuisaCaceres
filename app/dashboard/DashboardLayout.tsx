@@ -16,7 +16,6 @@ const PAGE_LABELS: Record<string, string> = {
   "/dashboard/schedule": "Publicaciones",
   "/dashboard/schedule/nueva-publicacion": "Nueva Publicación",
   "/dashboard/schedule/nuevo-evento": "Nuevo Evento",
-  "/dashboard/schedule/publicaciones": "Publicaciones",
 };
 
 const SidebarCollapsedContext = createContext(false);

@@ -7,11 +7,39 @@
  */
 export type EventKind = "calendar" | "ephemeris";
 
+export type EventApiKind = "CALENDAR" | "EPHEMERIS";
+
+export type EventApiCategory =
+  | "MEETING"
+  | "CULTURAL"
+  | "SPORTS"
+  | "HOLIDAY"
+  | "ACADEMIC"
+  | "OTHER";
+
 export interface EventCategory {
   id: string;
   label: string;
   emoji: string;
   badgeClass: string;
+}
+
+export interface EventApiResponse {
+  id: number;
+  title: string;
+  description: string | null;
+  location: string | null;
+  category: EventApiCategory;
+  kind: EventApiKind;
+  imageUrl: string | null;
+  featured: boolean;
+  allDay: boolean;
+  startsAt: string;
+  endsAt: string;
+  status: "DRAFT" | "PUBLISHED";
+  publishedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface BaseEvent {

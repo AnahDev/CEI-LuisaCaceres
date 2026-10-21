@@ -22,25 +22,29 @@ export interface ApiFetchOptions {
   body?: unknown;
   token?: string | null;
   signal?: AbortSignal;
+  cache?: RequestCache;
 }
 
 /**
  * Cliente de la API REST (Spring Boot, base `/api/v1`).
  * Las respuestas de error del backend son ProblemDetail (RFC 7807).
+ * También acepta FormData para subidas multipart (sin Content-Type manual).
  */
 export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
-  const { method = "GET", body, token, signal } = options;
+  const { method = "GET", body, token, signal, cache } = options;
+  const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
 
   let response: Response;
   try {
     response = await fetch(`${API_URL}/api/v1${path}`, {
       method,
       headers: {
-        ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+        ...(body !== undefined && !isFormData ? { "Content-Type": "application/json" } : {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: body === undefined ? undefined : isFormData ? (body as FormData) : JSON.stringify(body),
       signal,
+      cache,
     });
   } catch {
     throw new ApiError(0, "No se pudo conectar con el servidor. Verifica que la API esté en línea.");

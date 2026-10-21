@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import EventComposer from "@/app/components/dashboard/events/EventComposer";
+import Dashboard from "@/app/components/dashboard/Dashboard";
 
 export const metadata: Metadata = {
   title: "Nueva Publicación - Calendario - UEC Luisa Cáceres",
 };
 
 export default function NuevaPublicacionPage() {
-  return <EventComposer />;
+  return <Dashboard />;
 }

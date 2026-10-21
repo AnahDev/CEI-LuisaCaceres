@@ -2,7 +2,7 @@ import type { MediaItem } from "@/types/post";
 
 interface MediaThumbnailProps {
   item: MediaItem;
-  onRemove: (id: string) => void;
+  onRemove: (id: number) => void;
 }
 
 export default function MediaThumbnail({ item, onRemove }: MediaThumbnailProps) {

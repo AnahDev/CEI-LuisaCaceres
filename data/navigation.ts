@@ -11,6 +11,7 @@ export const NAV_ITEMS: NavItem[] = [
     children: [
       { id: "schedule-publications", label: "Publicaciones", href: "/dashboard/schedule" },
       { id: "schedule-new-publication", label: "Nueva publicación", href: "/dashboard/schedule/nueva-publicacion" },
+      { id: "schedule-new-event", label: "Nuevo evento", href: "/dashboard/schedule/nuevo-evento" },
     ],
   },
   { id: "settings", label: "Nada por ahora", icon: "settings", iconFilled: false, href: "#" },
