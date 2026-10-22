@@ -1,13 +1,11 @@
-import { Star } from 'lucide-react';
-
 const ITEMS = [
-  'Juego',
-  'Arte',
-  'Música',
-  'Naturaleza',
-  'Amistad',
-  'Curiosidad',
-  'Respeto',
+  { label: 'Juego', emoji: '🧩' },
+  { label: 'Arte', emoji: '🎨' },
+  { label: 'Música', emoji: '🎵' },
+  { label: 'Naturaleza', emoji: '🌳' },
+  { label: 'Amistad', emoji: '🤝' },
+  { label: 'Curiosidad', emoji: '🔍' },
+  { label: 'Respeto', emoji: '💛' },
 ];
 
 export default function MarqueeRibbon() {
@@ -21,13 +19,18 @@ export default function MarqueeRibbon() {
               className="flex shrink-0 items-center"
               aria-hidden={copy === 1 ? 'true' : undefined}
             >
-              {ITEMS.map((item) => (
+              {ITEMS.map(({ label, emoji }) => (
                 <span
-                  key={`${copy}-${item}`}
+                  key={`${copy}-${label}`}
                   className="flex items-center gap-3 px-6 text-sm font-extrabold uppercase tracking-[0.2em]"
                 >
-                  <Star className="size-4 fill-current" aria-hidden="true" />
-                  {item}
+                  <span
+                    className="text-2xl leading-none tracking-normal"
+                    aria-hidden="true"
+                  >
+                    {emoji}
+                  </span>
+                  {label}
                 </span>
               ))}
             </div>
